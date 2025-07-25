@@ -47,10 +47,18 @@ check_signing_key() {
 
 # Main logic
 main() {
-  log_info "Git working tree status:"
-  git status
-  echo ""
 
+  log_info "Git log:"
+  git log --oneline
+
+  log_info "Git working tree status:"
+  if [[ -z $(git status --porcelain) ]]; then
+    echo "[ℹ️] Working tree clean — nothing to commit."
+    exit 0
+  fi
+
+  echo ""
+  git status
   read -rp "👉 Do you want to commit? (y/n): " confirm
   if [[ "$confirm" != "y" ]]; then
     log_error "commit aborted by user."
