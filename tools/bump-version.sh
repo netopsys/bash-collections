@@ -55,5 +55,5 @@ echo "README.md updated to version $version"
 git add .
 git commit -am "$MSG_COMMIT $new_version"
 git tag -s "v$new_version" -m "Release v$new_version"
-git push origin v$new_version
+git push origin "v$new_version"
 git push
