@@ -15,5 +15,5 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run ShellCheck
-        uses: azohra/shellcheck-action@v0.8.0
+        uses: bewuethr/shellcheck-action@v2.2.0
 
