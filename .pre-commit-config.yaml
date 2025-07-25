@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: check-git-signing
         name: Check Git commit signing
-        entry: bash hooks/check-signing.sh
+        entry: bash tools/check-signing.sh
         language: system
         always_run: true
         pass_filenames: false
