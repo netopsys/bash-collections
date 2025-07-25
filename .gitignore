@@ -1,0 +1,8 @@
+# Backup files
+*~
+*.swp
+*.bak
+*.log
+
+# System
+.DS_Store
