@@ -1,13 +1,13 @@
 #!/bin/bash
 # Bump script version: major, minor, or patch
-# feat — new feature
-# fix — bug fix
-# docs — documentation only
-# style — formatting, whitespace, no functional changes
-# refactor — code refactoring without functional changes
-# perf — performance improvement
-# test — adding or fixing tests
-# chore — miscellaneous tasks, maintenance
+# feat: new feature
+# fix: bug fix
+# docs: documentation only
+# style: formatting, whitespace, no functional changes
+# refactor: code refactoring without functional changes
+# perf: performance improvement
+# test: adding or fixing tests
+# chore: miscellaneous tasks, maintenance
 
 set -e
 
@@ -54,6 +54,4 @@ echo "README.md updated to version $version"
 # Git: create Release tag and push
 git add .
 git commit -am "$MSG_COMMIT $new_version"
-git tag -s "v$new_version" -m "Release v$new_version"
 git push origin "v$new_version"
-# git push

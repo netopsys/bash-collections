@@ -1,6 +1,6 @@
 # 🧰 Bash Scripts Collection — by netopsys
 
-![Lint](https://github.com/netopsys/bash-scripts-collection/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
+![Lint](https://github.com/netopsys/netopsys-bash-security-collection/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)
 ![Version](https://img.shields.io/badge/version-0.6.0-blue.svg?style=flat-square&logoColor=white)
 
@@ -28,8 +28,8 @@
 ## 🚀 Getting Started
 
 ```bash
-git clone https://github.com/netopsys/bash-scripts-collection.git
-cd bash-scripts-collection
+git clone https://github.com/netopsys/netopsys-bash-security-collection.git
+cd netopsys-bash-security-collection
 chmod +x your_script.sh
 sudo ./your_script.sh
 ```
@@ -38,10 +38,10 @@ sudo ./your_script.sh
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/netopsys/bash-scripts-collection/blob/main/CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/netopsys/netopsys-bash-security-collection/blob/main/CONTRIBUTING.md) for guidelines.
 
 ---
 
 ## 🔒 Security
 
-Please review our [SECURITY.md](https://github.com/netopsys/bash-scripts-collection/blob/main/SECURITY.md) for reporting vulnerabilities and security policies.
+Please review our [SECURITY.md](https://github.com/netopsys/netopsys-bash-security-collection/blob/main/SECURITY.md) for reporting vulnerabilities and security policies.
