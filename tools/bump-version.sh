@@ -11,7 +11,7 @@
 
 set -e
 
-MSG_COMMIT="feat: bump version to "
+MSG_COMMIT="feat: bump version to"
 VERSION_FILE="VERSION"
 README_FILE="README.md"
 

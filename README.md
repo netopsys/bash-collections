@@ -1,9 +1,8 @@
 # 🧰 Bash Scripts Collection — by netopsys
 
-![Production Ready](https://img.shields.io/badge/status-production--ready-brightgreen?style=flat-square&labelColor=2e7d32&logo=checkmarx&logoColor=white)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square&logo=opensourceinitiative&logoColor=black)
-![Version](https://img.shields.io/badge/version-0.5.0-blue.svg?style=flat-square)
-![Lint](https://github.com/netopsys/bash-scripts-collection/actions/workflows/lint.yml/badge.svg?style=flat-square)
+![Lint](https://github.com/netopsys/bash-scripts-collection/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)
+![Version](https://img.shields.io/badge/version-0.6.0-blue.svg?style=flat-square&logoColor=white)
 
 > A curated collection of clean, secure, and production-ready Bash scripts for sysadmins, DevOps, and power users.
 
