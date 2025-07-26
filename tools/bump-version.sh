@@ -45,13 +45,26 @@ esac
 
 new_version="${major}.${minor}.${patch}"
 echo "$new_version" > "$VERSION_FILE"
-echo "✅ New version: $new_version"
 
 version=$(cat "$VERSION_FILE")
 sed -i -E "s|(version-)[0-9]+\.[0-9]+\.[0-9]+(-blue.svg)|\1${version}\2|g" "$README_FILE"
-echo "README.md updated to version $version"
+echo "[+] README.md updated to version $version"
 
 # Git: create Release tag and push
-git add .
-git commit -am "$MSG_COMMIT $new_version"
-git push origin "v$new_version"
+echo "[+] git log..."
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
+
+if [[ -n $(git status --porcelain) ]]; then
+  echo "[+] Bump version to v$new_version"
+  git add .
+  git commit -am "$MSG_COMMIT $new_version"
+  git tag -s "v$new_version" -m "Release v$new_version"
+  git push origin "v$new_version"
+  git push
+  echo "✅ New version: $new_version"
+else
+  echo "No changes. Nothing to do."
+fi
+
+echo "[+] git log..."
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
