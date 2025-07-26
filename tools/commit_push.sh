@@ -51,8 +51,10 @@ check_signing_key() {
 # ============================================================================
 # Main script logic
 # ============================================================================
-log_info "git log..."
-git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
+log_info "git log pretty..."
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 20
+log_info "git log graph..."
+git log --oneline --graph --decorate --all -n 20
 
 if [[ -n $(git status --porcelain) ]]; then
   git status
@@ -92,5 +94,7 @@ else
   fi
 fi
 
-log_info "git log..."
-git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
+log_info "git log pretty..."
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 20
+log_info "git log graph..."
+git log --oneline --graph --decorate --all -n 20

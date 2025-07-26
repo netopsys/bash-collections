@@ -51,8 +51,10 @@ sed -i -E "s|(version-)[0-9]+\.[0-9]+\.[0-9]+(-blue.svg)|\1${version}\2|g" "$REA
 echo "[+] README.md updated to version $version"
 
 # Git: create Release tag and push
-echo "[+] git log..."
-git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
+echo "[+] git log pretty..."
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 20
+echo "[+] git log graph..."
+git log --oneline --graph --decorate --all -n 20
 
 if [[ -n $(git status --porcelain) ]]; then
   echo "[+] Bump version to v$new_version"
@@ -66,5 +68,7 @@ else
   echo "No changes. Nothing to do."
 fi
 
-echo "[+] git log..."
-git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
+echo "[+] git log pretty..."
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 20
+echo "[+] git log graph..."
+git log --oneline --graph --decorate --all -n 20
