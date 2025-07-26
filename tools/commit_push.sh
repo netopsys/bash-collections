@@ -25,7 +25,7 @@ if [[ -n $(git status --porcelain) ]]; then
     git commit -am "$MESSAGE"
 
     read -rp "👉 You want to push? (y/n): " CONFIRM
-    if [[ "$CONFIRM" != "y" ]]; then
+    if [[ "$CONFIRM" == "y" ]]; then
       git push
     fi
 
@@ -34,11 +34,12 @@ if [[ -n $(git status --porcelain) ]]; then
 else
 
   git status
+  has_local_changes=$(git status --porcelain)
   git remote update > /dev/null 2>&1
-  ahead=$(git rev-list --left-only --count origin/$(git rev-parse --abbrev-ref HEAD)...HEAD)
+  ahead=$(git rev-list --left-only --count origin/"$(git rev-parse --abbrev-ref HEAD)...HEAD")
   echo "$ahead"
 
-  if [ -n "$ahead" -gt 0 ]; then
+  if [[ -n "$has_local_changes" || "$ahead" -gt 0 ]]; then
     git status
     read -rp "👉 You want to push commits? (y/n): " CONFIRM
     if [[ "$CONFIRM" != "y" ]]; then
