@@ -2,11 +2,11 @@
 #
 # ==============================================================================
 # Script Name : usb_security_control.sh
-# Description : USB security control — allows or blocks unauthorized USB devices.
+# Description : USB security control - allows or blocks unauthorized USB devices.
 # Author      : netopsys (https://github.com/netopsys)
 # License     : MIT
 # Created     : 2025-07-25
-# Updated     : 2025-07-25
+# Updated     : 2025-07-26
 # ============================================================================
 
 set -euo pipefail
@@ -132,7 +132,7 @@ interactive_mode() {
 }
 
 # ============================================================================
-# Main
+# Main script logic
 # ============================================================================
 main() {
   OUTPUT_JSON=false

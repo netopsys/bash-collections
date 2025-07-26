@@ -11,7 +11,7 @@
 
 set -e
 
-echo "git log..."
+echo "[+] git log..."
 git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
 
 if [[ -n $(git status --porcelain) ]]; then
@@ -37,7 +37,7 @@ if [[ -n $(git status --porcelain) ]]; then
 
 else
 
-  echo "git status..."
+  echo "[+] git status..."
   git status
   has_branch_is_ahead=$(git status | grep "Your branch is ahead of")
 
@@ -50,5 +50,5 @@ else
   fi
 fi
 
-echo "git log..."
+echo "[+] git log..."
 git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
