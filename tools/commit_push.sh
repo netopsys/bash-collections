@@ -34,13 +34,12 @@ if [[ -n $(git status --porcelain) ]]; then
 else
 
   git status
-  has_local_changes=$(git status --porcelain)
-  git remote update > /dev/null 2>&1
-  ahead=$(git rev-list --left-only --count origin/"$(git rev-parse --abbrev-ref HEAD)...HEAD")
-  echo "$ahead"
+  has_branch_is_ahead=$(git status | grep "Your branch is ahead of")
+  # git remote update > /dev/null 2>&1
+  # ahead=$(git rev-list --left-only --count origin/"$(git rev-parse --abbrev-ref HEAD)...HEAD")
+  # echo "$ahead"
 
-  if [[ -n "$has_local_changes" || "$ahead" -gt 0 ]]; then
-    git status
+  if [[ -n "$has_branch_is_ahead" ]]; then
     read -rp "👉 You want to push commits? (y/n): " CONFIRM
     if [[ "$CONFIRM" != "y" ]]; then
       git push
