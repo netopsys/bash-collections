@@ -41,7 +41,7 @@ else
 
   if [[ -n "$has_branch_is_ahead" ]]; then
     read -rp "👉 You want to push commits? (y/n): " CONFIRM
-    if [[ "$CONFIRM" != "y" ]]; then
+    if [[ "$CONFIRM" == "y" ]]; then
       git push
     fi
     

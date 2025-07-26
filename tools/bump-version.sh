@@ -52,7 +52,7 @@ sed -i -E "s|(version-)[0-9]+\.[0-9]+\.[0-9]+(-blue.svg)|\1${version}\2|g" "$REA
 echo "README.md updated to version $version"
 
 # Git: create Release tag and push
-echo "Git log..."
+echo "git log..."
 git log --pretty=format:"%ad : %s" -n 5
 
 if [[ -n $(git status --porcelain) ]]; then
@@ -66,5 +66,5 @@ else
   echo "No changes. Nothing to do."
 fi
 
-echo "Git log..."
+echo "git log..."
 git log --pretty=format:"%ad : %s" -n 5
