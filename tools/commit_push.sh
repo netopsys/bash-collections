@@ -11,7 +11,7 @@
 
 set -e
 
-echo "Git log..."
+echo "git log..."
 git log --pretty=format:"%ad : %s" -n 5
 
 if [[ -n $(git status --porcelain) ]]; then
@@ -27,12 +27,14 @@ if [[ -n $(git status --porcelain) ]]; then
     read -rp "👉 You want to push? (y/n): " CONFIRM
     if [[ "$CONFIRM" == "y" ]]; then
       git push
+      echo "git push..."
     fi
 
   fi
 
 else
 
+  echo "git status..."
   git status
   has_branch_is_ahead=$(git status | grep "Your branch is ahead of")
   # git remote update > /dev/null 2>&1
@@ -43,10 +45,11 @@ else
     read -rp "👉 You want to push commits? (y/n): " CONFIRM
     if [[ "$CONFIRM" == "y" ]]; then
       git push
+      echo "git push..."
     fi
     
   fi
 fi
 
-echo "Git log..."
+echo "git log..."
 git log --pretty=format:"%ad : %s" -n 5
