@@ -33,6 +33,7 @@ if [[ -n $(git status --porcelain) ]]; then
 
 else
 
+  git status
   git remote update > /dev/null 2>&1
   ahead=$(git rev-list --left-only --count origin/$(git rev-parse --abbrev-ref HEAD)...HEAD)
   echo "$ahead"
