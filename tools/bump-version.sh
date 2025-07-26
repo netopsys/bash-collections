@@ -52,8 +52,19 @@ sed -i -E "s|(version-)[0-9]+\.[0-9]+\.[0-9]+(-blue.svg)|\1${version}\2|g" "$REA
 echo "README.md updated to version $version"
 
 # Git: create Release tag and push
-git add .
-git commit -am "$MSG_COMMIT $new_version"
-git tag -s "v$new_version" -m "Release v$new_version"
-git push origin "v$new_version"
-# git push
+echo "Git log..."
+git log --pretty=format:"%ad : %s" -n 5
+
+if [[ -n $(git status --porcelain) ]]; then
+  echo "Bump version to v$new_version"
+  git add .
+  git commit -am "$MSG_COMMIT $new_version"
+  git tag -s "v$new_version" -m "Release v$new_version"
+  git push origin "v$new_version"
+  git push
+else
+  echo "No changes. Nothing to do."
+fi
+
+echo "Git log..."
+git log --pretty=format:"%ad : %s" -n 5

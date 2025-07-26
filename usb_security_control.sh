@@ -110,8 +110,8 @@ interactive_mode() {
   read -rp "👉 Action: Allow or Block device? (a/b): " CHOICE
   [[ "$CHOICE" =~ ^[ab]$ ]] || { log_error "Invalid choice"; exit 1; }
 
-  read -rp "👉 Enter device ID: " DEVICE_ID
-  read -rp "👉 Confirm $([[ $CHOICE == "a" ]] && echo allow || echo block) device ID $DEVICE_ID? (y/n): " CONFIRM
+  read -rp "👉 Select device ID: " DEVICE_ID
+  read -rp "👉 Confirm $([[ $CHOICE == "a" ]] && echo allow || echo block) device ID=$DEVICE_ID? (y/n): " CONFIRM
 
   if [[ "$CONFIRM" != "y" ]]; then
     log_warn "Operation aborted by user."
@@ -120,10 +120,12 @@ interactive_mode() {
 
   if [[ "$CHOICE" == "a" ]]; then
     usbguard allow-device "$DEVICE_ID"
-    log_ok "Device $DEVICE_ID allowed."
+    STATUS_DEVICE_ID=$(usbguard list-devices | grep "$DEVICE_ID:")
+    log_ok "Status: $STATUS_DEVICE_ID"
   else
     usbguard block-device "$DEVICE_ID"
-    log_ok "Device $DEVICE_ID blocked."
+    STATUS_DEVICE_ID=$(usbguard list-devices | grep "$DEVICE_ID:")
+    log_ok "Status: $STATUS_DEVICE_ID"
   fi
 
   log_info "Operation complete."
