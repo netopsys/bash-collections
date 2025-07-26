@@ -1,13 +1,13 @@
 #!/bin/bash
 # Bump script version: major, minor, or patch
-# feat — new feature
-# fix — bug fix
-# docs — documentation only
-# style — formatting, whitespace, no functional changes
-# refactor — code refactoring without functional changes
-# perf — performance improvement
-# test — adding or fixing tests
-# chore — miscellaneous tasks, maintenance
+# feat: new feature
+# fix: bug fix
+# docs: documentation only
+# style: formatting, whitespace, no functional changes
+# refactor: code refactoring without functional changes
+# perf: performance improvement
+# test: adding or fixing tests
+# chore: miscellaneous tasks, maintenance
 
 set -e
 
@@ -53,7 +53,7 @@ echo "README.md updated to version $version"
 
 # Git: create Release tag and push
 echo "git log..."
-git log --pretty=format:"%ad : %s" -n 5
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
 
 if [[ -n $(git status --porcelain) ]]; then
   echo "Bump version to v$new_version"
@@ -67,4 +67,4 @@ else
 fi
 
 echo "git log..."
-git log --pretty=format:"%ad : %s" -n 5
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
