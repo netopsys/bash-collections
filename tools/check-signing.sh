@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SIGNING_ENABLED=$(git config commit.gpgsign)
+SIGNING_ENABLED=$(git config --global commit.gpgsign)
 SIGNING_KEY=$(git config user.signingkey)
 
 if [ "$SIGNING_ENABLED" != "true" ]; then

@@ -1,25 +1,23 @@
 #!/bin/bash
 #
 # ==============================================================================
-# Script Name : usb_security_control.sh
-# Description : USB security control - allows or blocks unauthorized USB devices.
-# Author      : netopsys (https://github.com/netopsys)
-# License     : MIT
-# Created     : 2025-07-25
-# Updated     : 2025-07-26
+# Script Name : usb-control.sh
+# Description : Manage USB Access with USBGuard.
+# Author      : netopsys
+# License     : gpl-3.0
 # ============================================================================
 
 set -euo pipefail
 trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 
 # ============================================================================
-# Colors & Logging
+# Variables
 # ============================================================================
-RED="\033[0;31m"
-GREEN="\033[0;32m"
-YELLOW="\033[0;33m"
-CYAN="\033[0;36m"
-RESET="\033[0m"
+readonly RED="\033[0;31m"
+readonly GREEN="\033[0;32m"
+readonly YELLOW="\033[0;33m"
+readonly CYAN="\033[0;36m"
+readonly RESET="\033[0m"
 
 log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
 log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; }
@@ -29,12 +27,10 @@ log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*";
 # ============================================================================
 # Functions
 # ============================================================================
-show_help() {
+usage() {
   cat << EOF
-🛡️  USB Security Control — Manage USB access using USBGuard
-
 Usage:
-  $0 [options]
+ $(basename "$0") [options]
 
 Options:
   -h, --help        Show this help message
@@ -42,9 +38,8 @@ Options:
   --json            Output device list in JSON format
 
 Examples:
-  $0                Interactively allow/block USB devices
-  $0 --dry-run      Just list USB devices
-  $0 --json         Output JSON list for automation
+  $(basename "$0")             Interactively allow/block USB devices
+  $(basename "$0") --list      Just list USB devices 
 
 Requirements:
   - Must be run as root
@@ -100,12 +95,14 @@ list_devices() {
   else
     usbguard list-devices
   fi
+
+  if [[ "$LIST" == true ]]; then
+    log_info "Exit..."
+    exit 0
+  fi
 }
 
 interactive_mode() {
-  log_info "Listing USB devices..."
-  list_devices
-
   echo
   read -rp "👉 Action: Allow or Block device? (a/b): " CHOICE
   [[ "$CHOICE" =~ ^[ab]$ ]] || { log_error "Invalid choice"; exit 1; }
@@ -119,52 +116,47 @@ interactive_mode() {
   fi
 
   if [[ "$CHOICE" == "a" ]]; then
-    usbguard allow-device "$DEVICE_ID"
-    STATUS_DEVICE_ID=$(usbguard list-devices | grep "$DEVICE_ID:")
-    log_ok "Status: $STATUS_DEVICE_ID"
+    usbguard allow-device "$DEVICE_ID" 
+    log_ok "Status: $(usbguard list-devices | grep "$DEVICE_ID:")"
   else
-    usbguard block-device "$DEVICE_ID"
-    STATUS_DEVICE_ID=$(usbguard list-devices | grep "$DEVICE_ID:")
-    log_ok "Status: $STATUS_DEVICE_ID"
+    usbguard block-device "$DEVICE_ID" 
+    log_ok "Status: $(usbguard list-devices | grep "$DEVICE_ID:")"
   fi
 
-  log_info "Operation complete."
+  if [[ "$LIST" != true ]]; then
+    log_info "Exit..."
+    exit 0
+  fi
+
 }
 
 # ============================================================================
 # Main script logic
 # ============================================================================
 main() {
-  OUTPUT_JSON=false
-  DRY_RUN=false
+  OUTPUT_JSON=true
+  LIST=false
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -h|--help) show_help ;;
-      --json)    OUTPUT_JSON=true ;;
-      --dry-run) DRY_RUN=true ;;
-      *) log_error "Unknown option: $1"; exit 1 ;;
+      -h|--help) usage ;;
+      --list) LIST=true ;;
     esac
     shift
   done
 
-  check_root
-  check_dependencies
-
   echo "==========================================================="
-  echo "🛡️  USB Security Control — Manage USB Access with USBGuard"
-  echo "==========================================================="
-  echo "Author : netopsys (https://github.com/netopsys)"
-  echo "Date   : $(date +%Y-%m-%d)"
+  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo "                                                           "
+  echo "   Script : usb-control - Manage USB Access with USBGuard  "
+  echo "   Author : netopsys (https://github.com/netopsys)         "
   echo "==========================================================="
   echo
 
-  if [[ "$DRY_RUN" == true || "$OUTPUT_JSON" == true ]]; then
-    list_devices
-    exit 0
-  fi
-
-  interactive_mode
+  check_root
+  check_dependencies
+  list_devices 
+  interactive_mode 
 }
 
 main "$@"

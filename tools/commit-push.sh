@@ -8,10 +8,10 @@ IFS=$'\n\t'
 # ============================================================================
 
 # Colors
-RED="\033[0;31m"
-GREEN="\033[0;32m"
-CYAN="\033[0;36m"
-RESET="\033[0m"
+readonly RED="\033[0;31m"
+readonly GREEN="\033[0;32m"
+readonly CYAN="\033[0;36m"
+readonly RESET="\033[0m"
 
 # Helper log functions
 log_info()    { echo -e "${CYAN}[INFO]${RESET} $*"; }

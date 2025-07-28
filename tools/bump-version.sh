@@ -11,9 +11,9 @@
 
 set -e
 
-MSG_COMMIT="feat: bump version to"
-VERSION_FILE="VERSION"
-README_FILE="README.md"
+readonly MSG_COMMIT="feat: bump version to"
+readonly VERSION_FILE="VERSION"
+readonly README_FILE="README.md"
 
 
 if [ ! -f "$VERSION_FILE" ]; then
@@ -39,7 +39,7 @@ case "$1" in
     ;;
   *)
     echo "Usage: $0 [major|minor|patch]"
-    exit 1
+    exit 0
     ;;
 esac
 
