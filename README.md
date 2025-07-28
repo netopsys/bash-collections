@@ -2,17 +2,18 @@
 
 ![Lint](https://github.com/netopsys/netopsys-bash-collections/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)
-![Version](https://img.shields.io/badge/version-0.7.0-blue.svg?style=flat-square&logoColor=white)
+![Version](https://img.shields.io/badge/version-0.8.0-blue.svg?style=flat-square&logoColor=white)
 
 > A curated collection of clean, secure, and production-ready Bash scripts for sysadmins, DevOps, and power users.
 
 ## Contents
 
-| Collections                 | Scripts           | Description                                   |
-|-----------------------------|-------------------|-----------------------------------------------|
-| - security                  |                   |                                               |
-|                             | `usb_control.sh`  | Manage USB device access using USBGuard       |
-| _More scripts coming soon_  |                   |
+| Collections                 | Scripts                  | Description                                   |
+|-----------------------------|--------------------------|-----------------------------------------------| 
+|                             | `packages-control.sh`    | Display infos packages                        |
+|                             | `shellcheck-control.sh`  | Check Quality Scripts Bash                    |
+|                             | `usb-control.sh`         | Manage USB device access using USBGuard       |
+| _More scripts coming soon_  |                          |
 
 ## Requirements
 
@@ -24,9 +25,8 @@
 
 ```bash
 git clone https://github.com/netopsys/netopsys-bash-collections.git
-cd netopsys-bash-collections/collectionssecurity
-chmod +x your_script.sh
-sudo ./your_script.sh
+cd netopsys-bash-collections 
+sudo ./runner.sh
 ```
 ## Contributing
 
