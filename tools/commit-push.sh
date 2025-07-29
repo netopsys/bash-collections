@@ -59,20 +59,20 @@ git log --oneline --graph --decorate --all -n 5
 
 if [[ -n $(git status --porcelain) ]]; then
   git status
-  read -rp "👉 You want to add change? (y/n): " CONFIRM
+  read -rp "➤ You want to add change? (y/n): " CONFIRM
 
   if [[ "$CONFIRM" == "y" ]]; then
 
     check_signing_key
     git add .
 
-    read -rp "👉 You want to commit change? (y/n): " CONFIRM
+    read -rp "➤ You want to commit change? (y/n): " CONFIRM
     if [[ "$CONFIRM" == "y" ]]; then
       show_commit_conventions
-      read -rp "👉 Write message commit : " MESSAGE
+      read -rp "➤ Write message commit : " MESSAGE
       git commit -am "$MESSAGE"
 
-      read -rp "👉 You want to push? (y/n): " CONFIRM
+      read -rp "➤ You want to push? (y/n): " CONFIRM
       if [[ "$CONFIRM" == "y" ]]; then
         git push
       fi
@@ -87,7 +87,7 @@ else
   has_branch_is_ahead=$(git status | grep "Your branch is ahead of")
 
   if [[ -n "$has_branch_is_ahead" ]]; then
-    read -rp "👉 You want to push commits? (y/n): " CONFIRM
+    read -rp "➤ You want to push commits? (y/n): " CONFIRM
     if [[ "$CONFIRM" == "y" ]]; then
       git push
     fi

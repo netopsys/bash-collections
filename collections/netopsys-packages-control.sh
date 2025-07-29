@@ -4,7 +4,7 @@
 # Script Name : netopsys-packages_control.sh
 # Description : Display installed or upgradable packages with version, dependencies and license info, list top 20 licenses.
 # Author      : netopsys (https://github.com/netopsys)
-# License     : gpl-3.0
+# License     : GPL-3.0 
 # ==============================================================================
  
 set -euo pipefail

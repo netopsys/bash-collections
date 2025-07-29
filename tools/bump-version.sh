@@ -1,13 +1,5 @@
 #!/bin/bash
 # Bump script version: major, minor, or patch
-# feat: new feature
-# fix: bug fix
-# docs: documentation only
-# style: formatting, whitespace, no functional changes
-# refactor: code refactoring without functional changes
-# perf: performance improvement
-# test: adding or fixing tests
-# chore: miscellaneous tasks, maintenance
 
 set -e
 
@@ -67,8 +59,3 @@ if [[ -n $(git status --porcelain) ]]; then
 else
   echo "No changes. Nothing to do."
 fi
-
-echo "[+] git log pretty..."
-git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
-echo "[+] git log graph..."
-git log --oneline --graph --decorate --all -n 5

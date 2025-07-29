@@ -4,7 +4,7 @@
 # Script Name : netopsys-usb-control.sh
 # Description : Manage USB Access with USBGuard.
 # Author      : netopsys
-# License     : gpl-3.0
+# License     : GPL-3.0 
 # ============================================================================
 
 set -euo pipefail
@@ -55,7 +55,7 @@ header_script() {
   echo "==========================================================="
   echo "🛡️  NETOPSYS - Bash Collections                            "
   echo "                                                           "
-  echo "   Script : netopsys-usb-control - Manage USB Access with USBGuard  "
+  echo "   Script : netopsys-usb-control.sh - Manage USB Access with USBGuard  "
   echo "   Author : netopsys (https://github.com/netopsys)         "
   echo "==========================================================="
   echo
@@ -118,11 +118,11 @@ list_devices() {
 
 interactive_mode() {
   echo
-  read -rp "👉 Action: Allow or Block device? (a/b): " CHOICE
+  read -rp "➤ Action: Allow or Block device? (a/b): " CHOICE
   [[ "$CHOICE" =~ ^[ab]$ ]] || { log_error "Invalid choice"; exit 1; }
 
-  read -rp "👉 Select device ID: " DEVICE_ID
-  read -rp "👉 Confirm $([[ $CHOICE == "a" ]] && echo allow || echo block) device ID=$DEVICE_ID? (y/n): " CONFIRM
+  read -rp "➤ Select device ID: " DEVICE_ID
+  read -rp "➤ Confirm $([[ $CHOICE == "a" ]] && echo allow || echo block) device ID=$DEVICE_ID? (y/n): " CONFIRM
 
   if [[ "$CONFIRM" != "y" ]]; then
     log_warn "Operation aborted by user."

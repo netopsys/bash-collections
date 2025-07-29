@@ -4,7 +4,7 @@
 # SCRIPT NAME : netopsys-recon-enum.sh
 # DESCRIPTION : Automatic reconnaissance phase on a network target.
 # AUTHOR      : netopsys
-# LICENSE     : GPL-3.0
+# License     : GPL-3.0 
 # REQUIREMENTS: whois, geoiplookup(geoip-bin), host, nslookup, dig, ping, traceroute
 #===============================================================================
 
@@ -70,7 +70,7 @@ warning_script() {
   echo -e "or for which you have explicit authorization. Any unauthorized use"
   echo -e "may be illegal and lead to prosecution."
   echo -e "You are solely responsible for the use of this tool."
-  read -rp "👉 Confirm you want to continue? (y/n): " CONFIRM
+  read -rp "➤ Confirm you want to continue? (y/n): " CONFIRM
 
   if [[ "$CONFIRM" != "y" ]]; then
     log_warn "Operation aborted by user."

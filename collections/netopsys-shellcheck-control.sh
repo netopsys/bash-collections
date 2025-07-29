@@ -4,7 +4,7 @@
 # Script Name : netopsys-shellcheck-control.sh 
 # Description : Check Quality Script Bash 
 # Author      : netopsys (https://github.com/netopsys)
-# License     : gpl-3.0
+# License     : GPL-3.0 
 # ==============================================================================
 
 set -euo pipefail
@@ -15,19 +15,16 @@ trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 # ------------------------------------------------------------------------------
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
-readonly YELLOW="\033[0;33m"
-readonly WHITE="\033[0;37m"
+readonly YELLOW="\033[0;33m" 
 readonly RESET="\033[0m"
 
 # ------------------------------------------------------------------------------
 # Log / Affichage
 # ------------------------------------------------------------------------------
-log()  { echo -e " ${WHITE}$*${RESET}" >&2; }
-log_info()  { echo -e "   ${WHITE}[INFO]${RESET} $*" >&2; }
-log_ok()    { echo -e "   ${GREEN}[OK]${RESET} $*" >&2; }
-log_warn()  { echo -e "   ${YELLOW}[WARN]${RESET} $*" >&2; }
-log_error() { echo -e "   ${RED}[ERROR]${RESET} $*" >&2; }
-log_excellent()  { echo -e "   ${GREEN}[PERFECT]${RESET} $*" >&2; }
+log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
+log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; }
+log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
+log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*"; } 
 
 # ------------------------------------------------------------------------------
 # Functions
@@ -55,7 +52,7 @@ header_script() {
   echo "==========================================================="
   echo "🛡️  NETOPSYS - Bash Collections                            "
   echo "                                                           "
-  echo "   Script : shellcheck-control - Check Quality Scripts Bash"
+  echo "   Script : shellcheck-control.sh - Check Quality Scripts Bash"
   echo "   Author : netopsys (https://github.com/netopsys)         "
   echo "==========================================================="
   echo
@@ -179,7 +176,7 @@ main() {
     # Calcul score and log résult
     sum=$(( shellcheck_s + shellcheck_score ))
     global_score=$(( sum / 1 ))
-    log_summary "$global_score" "$COUNT $(basename "$file")"
+    log_summary "$global_score" "$(basename "$file")"
 
     total_score=$(( total_score + global_score ))
     file_count=$(( file_count + 1 ))
@@ -190,9 +187,9 @@ main() {
     avg_score=$(( total_score / file_count ))
     avg_grade=$(score_to_grade "$avg_score")
     echo ""
-    echo "===========================================================" 
-    log_summary "$avg_score" "$DIR : score: $avg_score/100 - Level: $avg_grade"
-    echo "==========================================================="
+    echo "-----------------------------------------------------------" 
+    log_summary "$avg_score" "score: $avg_score/100 - Level: $avg_grade"
+    echo "-----------------------------------------------------------"
   fi
 
 }

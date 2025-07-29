@@ -5,13 +5,13 @@ SIGNING_KEY=$(git config user.signingkey)
 
 if [ "$SIGNING_ENABLED" != "true" ]; then
   echo "❌ Git commit signing is DISABLED"
-  echo "👉 Enable it: git config --global commit.gpgsign true"
+  echo "➤ Enable it: git config --global commit.gpgsign true"
   exit 1
 fi
 
 if [ -z "$SIGNING_KEY" ]; then
   echo "❌ No signing key configured (user.signingkey is missing)"
-  echo "👉 Set it: git config --global user.signingkey ~/.ssh/id_sign_git.pub"
+  echo "➤ Set it: git config --global user.signingkey ~/.ssh/id_sign_git.pub"
   exit 1
 fi
 

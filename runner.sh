@@ -59,7 +59,7 @@ list_scripts() {
 }
 
 select_script() {
-  read -rp "👉 Select a script number to run: " choice
+  read -rp "➤ Select a script number to run: " choice
 
   if ! [[ "$choice" =~ ^[0-9]+$ ]] || (( choice < 1 || choice > ${#scripts[@]} )); then
     log_error "Invalid selection: $choice"
@@ -70,7 +70,7 @@ select_script() {
 }
 
 ask_show_help() {
-  read -rp "👉 Do you want to see the help for this script before? (y/n): " show_help
+  read -rp "➤ Do you want to see the help for this script before? (y/n): " show_help
   if [[ "$show_help" =~ ^[Yy]$ ]]; then
     log_info "Displaying help..."
     if ! bash "$selected_script" --help &> /dev/null && ! bash "$selected_script" -h &> /dev/null; then
@@ -82,7 +82,7 @@ ask_show_help() {
 } 
 
 prompt_args() {
-  read -rp "👉 Enter options/arguments to pass like you launch script (or leave empty): " user_args
+  read -rp "➤ Enter options/arguments to pass like you launch script (or leave empty): " user_args
   IFS=' ' read -r -a args <<< "$user_args"
 }
 
