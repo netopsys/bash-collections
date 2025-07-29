@@ -8,11 +8,12 @@
 
 ## Contents
 
-| Collections                 | Scripts                           | Description                                   |
-|-----------------------------|-----------------------------------|-----------------------------------------------| 
-|                             | `netopsys-packages-control.sh`    | Display infos packages (Deb)                  |
-|                             | `netopsys-shellcheck-control.sh`  | Check quality scripts bash                    |
-|                             | `netopsys-usb-control.sh`         | Manage USB device access                      |
+| Collections                 | Scripts                           | Description                                                            |
+|-----------------------------|-----------------------------------|------------------------------------------------------------------------| 
+|                             | `netopsys-packages-control.sh`    | Display infos packages (Deb)                                           |
+|                             | `netopsys-shellcheck-control.sh`  | Check quality scripts bash                                             |
+|                             | `netopsys-usb-control.sh`         | Manage USB device access                                               |
+|                             | `netopsys-recon-enum.sh`          | Automatic reconnaissance phase on a network target                     |
 | _More scripts coming soon_  |                                   |
 
 ## Requirements
