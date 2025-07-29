@@ -8,9 +8,8 @@
 # Created     : 2025-07-26
 # Updated     : 2025-07-26
 # ==============================================================================
-
 set -euo pipefail
-trap 'log_warn "Interrupted by user"; exit 1' SIGINT
+# trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 
 echo "==========================================================="
 echo "🛡️  NETOPSYS - Bash Collections                            "
@@ -80,16 +79,16 @@ ask_show_help() {
       bash "$selected_script" --help 2>/dev/null || bash "$selected_script" -h
     fi
   fi
-}
+} 
 
 prompt_args() {
   read -rp "👉 Enter options/arguments to pass like you launch script (or leave empty): " user_args
-  readonly args="$user_args"
+  IFS=' ' read -r -a args <<< "$user_args"
 }
 
 run_script() {
-  log_info "Running: bash \"$selected_script\" $args"
-  bash "$selected_script" "$args"
+  log_info "Running: bash \"$selected_script\" ${args[*]}"
+  bash "$selected_script" "${args[@]}"
 }
 
 # ------------------------------------------------------------------------------

@@ -19,6 +19,9 @@ readonly YELLOW="\033[0;33m"
 readonly CYAN="\033[0;36m"
 readonly RESET="\033[0m"
 
+# ------------------------------------------------------------------------------
+# Log / Affichage
+# ------------------------------------------------------------------------------
 log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
 log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; }
 log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
@@ -87,6 +90,7 @@ check_dependencies() {
 }
 
 list_devices() {
+  log_info "List devices"
   if [[ "$OUTPUT_JSON" == true ]]; then
     usbguard list-devices | awk '
       BEGIN {

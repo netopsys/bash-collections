@@ -19,6 +19,9 @@ readonly YELLOW="\033[0;33m"
 readonly WHITE="\033[0;37m"
 readonly RESET="\033[0m"
 
+# ------------------------------------------------------------------------------
+# Log / Affichage
+# ------------------------------------------------------------------------------
 log()  { echo -e " ${WHITE}$*${RESET}" >&2; }
 log_info()  { echo -e "   ${WHITE}[INFO]${RESET} $*" >&2; }
 log_ok()    { echo -e "   ${GREEN}[OK]${RESET} $*" >&2; }
@@ -26,9 +29,9 @@ log_warn()  { echo -e "   ${YELLOW}[WARN]${RESET} $*" >&2; }
 log_error() { echo -e "   ${RED}[ERROR]${RESET} $*" >&2; }
 log_excellent()  { echo -e "   ${GREEN}[PERFECT]${RESET} $*" >&2; }
 
-# ==============================================================================
-# Functions 
-# ==============================================================================
+# ------------------------------------------------------------------------------
+# Functions
+# ------------------------------------------------------------------------------
 usage() {
   cat << EOF
 Usage: $(basename "$0") [options]
@@ -164,17 +167,19 @@ main() {
   local total_score=0
   local file_count=0
   local shellcheck_s=0
+  local COUNT=0
 
   # Check Quality Script Bash
   echo "Scan shellcheck : $DIR"
   for file in "${sh_files[@]}"; do 
 
     shellcheck_score=$(check_shellcheck "$file")
+    ((COUNT +=1))
     
     # Calcul score and log résult
     sum=$(( shellcheck_s + shellcheck_score ))
     global_score=$(( sum / 1 ))
-    log_summary "$global_score" "$(basename "$file")"
+    log_summary "$global_score" "$COUNT $(basename "$file")"
 
     total_score=$(( total_score + global_score ))
     file_count=$(( file_count + 1 ))

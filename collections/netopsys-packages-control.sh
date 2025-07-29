@@ -18,20 +18,23 @@ readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[1;33m"
 readonly CYAN="\033[0;36m"
 readonly RESET="\033[0m" 
+declare -A LICENSE_COUNT=0
+declare -A TOTAL_PACKAGES=0
+declare -A TOTAL_SIZE=0
 
+# ------------------------------------------------------------------------------
+# Log / Affichage
+# ------------------------------------------------------------------------------
 log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
 log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; }
 log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
 log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*"; }
 
-declare -A LICENSE_COUNT=0
-declare -A TOTAL_PACKAGES=0
-declare -A TOTAL_SIZE=0
 # ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
 usage() {
-  echo "Usage: $0 [--installed | --upgradable | --debug | --help]"
+  echo "Usage: $(basename "$0") [--installed | --upgradable | --debug | --help]"
   exit 0
 }
 
@@ -103,6 +106,7 @@ print_summary() {
 
 run_audit() { 
   declare -A PKG_INFO_MAP
+  declare -I OPTION="$1"
   while IFS="|" read -r pkg ver arch maint maint_prio sec home size status descr; do
     PKG_INFO_MAP["$pkg"]="$ver|$arch|$maint|$maint_prio|$sec|$home|$size|$status|$descr"
   done < <(dpkg-query -W -f='${binary:Package}|${Version}|${Architecture}|${Maintainer}|${Priority}|${Section}|${Homepage}|${Installed-Size}|${Status}|${Description}\n')
@@ -113,7 +117,14 @@ run_audit() {
         echo -e "\n📦 ${YELLOW}Warning:${RESET} Info not found for package '$pkg'"
         continue
     fi
-    audit_package "$pkg" "${PKG_INFO_MAP[$pkg]}"
+
+    if [[ "$OPTION" != "installed" && "$OPTION" != "upgradable" ]]; then
+      audit_package "$OPTION" "${PKG_INFO_MAP[$pkg]}"
+      print_summary
+      exit 0
+    else
+      audit_package "$pkg" "${PKG_INFO_MAP[$pkg]}"
+    fi
   done
 
   print_summary
@@ -129,18 +140,30 @@ case "$1" in
   --installed)
     echo -e "${YELLOW}Installed packages:${RESET}"
     mapfile -t pkgs < <(dpkg-query -W -f='${binary:Package}\n' | sort)
-    run_audit 
+    run_audit "installed"
     ;;
   --upgradable)
     echo -e "${YELLOW}Upgradable packages:${RESET}"
     mapfile -t pkgs < <(apt list --upgradable 2>/dev/null | grep -v "^Listing" | cut -d/ -f1)
-    run_audit  
+    run_audit "upgradable"  
+    ;;
+  --filter)
+    if [[ -n "$2" ]]; then
+      target_pkg="$2"
+      shift 2
+      echo -e "${YELLOW}Filter package:${RESET}"
+      mapfile -t pkgs < <(dpkg-query -W -f='${binary:Package}\n' | sort)
+      run_audit "$target_pkg"
+    else
+      log_error "L'option $1 nécessite un argument."
+      usage
+    fi
     ;;
   --debug)
     set -x
     echo -e "${YELLOW}Installed packages:${RESET}"
     mapfile -t pkgs < <(dpkg-query -W -f='${binary:Package}\n' | sort)
-    run_audit "--installed" 
+    run_audit "installed" 
     ;;
   -h|--help | *)
     usage
