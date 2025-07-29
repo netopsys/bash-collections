@@ -28,7 +28,7 @@
 ```bash
 git clone https://github.com/netopsys/netopsys-bash-collections.git
 cd netopsys-bash-collections 
-sudo ./runner.sh
+sudo ./wrapper.sh
 ```
 ## Contributing
 

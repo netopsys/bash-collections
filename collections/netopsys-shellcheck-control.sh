@@ -8,19 +8,28 @@
 # ==============================================================================
 
 set -euo pipefail
-trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 
 # ------------------------------------------------------------------------------
-# Variables
+# Banner
+# ------------------------------------------------------------------------------
+banner_script() {
+  echo "==========================================================="
+  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo "                                                           "
+  echo "   Script : shellcheck quality scripts bash                "
+  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo "==========================================================="
+  echo
+}
+
+# ------------------------------------------------------------------------------
+# Logging Helpers
 # ------------------------------------------------------------------------------
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[0;33m" 
 readonly RESET="\033[0m"
-
-# ------------------------------------------------------------------------------
-# Log / Affichage
-# ------------------------------------------------------------------------------
+ 
 log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
 log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; }
 log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
@@ -29,33 +38,20 @@ log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*";
 # ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-usage() {
+show_help() {
   cat << EOF
 Usage: $(basename "$0") [options]
 
 Options:
   -h, --help        Show this help message 
-  <path_directory>  Path directory to check
+  -p, --path        Path directory to check
 
 Examples:
   $(basename "$0") --help 
-  $(basename "$0") <path_directory> 
-
-Requirements:
-  - Must be run as root
+  $(basename "$0") -p <path_directory> 
 
 EOF
   exit 0
-}
-
-header_script() {
-  echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
-  echo "                                                           "
-  echo "   Script : shellcheck-control.sh - Check Quality Scripts Bash"
-  echo "   Author : netopsys (https://github.com/netopsys)         "
-  echo "==========================================================="
-  echo
 }
 
 check_root() {
@@ -130,32 +126,46 @@ check_shellcheck() {
 # ------------------------------------------------------------------------------
 main() {
 
-  header_script
-
-  if [[ $# -eq 0 ]]; then
-    usage
+  if [[ $# -lt 2 ]]; then
+    log_error "Missing Options"
+    show_help
   fi
 
-  local DIR="$1"
+  local DIR="$2"
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -h|--help) usage ;; 
+      -p|--path)
+        if [[ -n "$2" ]]; then
+          DIR="$2"
+          shift 2
+        else
+          log_error "Option $1 requires an argument."
+          show_help
+        fi
+        ;;
+      -h|--help) 
+        show_help
+        ;;
+      *)
+        log_error "Unknown option: $1"
+        show_help
+        ;;
     esac
-    shift
   done
 
+  banner_script
   check_root
   check_dependencies
 
   # Check is directory
   if [[ ! -d "$DIR" ]]; then
-    echo -e "[ERROR] '$DIR' is not a valid directory."
-    usage 
+    log_error " '$DIR' is not a valid directory."
+    show_help 
   fi
 
   # Get files
-  mapfile -d '' sh_files < <(find "$DIR" -type f -perm /u+x \( -name "*.sh" -o -exec grep -Iq "/bin/bash" {} \; \) -print0)
+  mapfile -d '' sh_files < <(find "$DIR" -type f -perm /u+x -not -name '*.md' \( -name "*.sh" -o -exec grep -Iq "/bin/bash" {} \; \) -print0)
   if [[ ${#sh_files[@]} -eq 0 ]]; then
     log_warn "No .sh files found in $DIR"
     exit 0

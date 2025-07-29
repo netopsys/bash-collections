@@ -8,46 +8,49 @@
 # ==============================================================================
 
 # set -euo pipefail
-trap 'echo -e "\n${YELLOW}[WARN] Interrupted by user.${RESET}"; exit 1' SIGINT
 
 # ------------------------------------------------------------------------------
-# Variables
+# Banner
 # ------------------------------------------------------------------------------
-RED="\033[0;31m"
-GREEN="\033[0;32m"
-YELLOW="\033[0;33m"
-CYAN="\033[0;36m"
-RESET="\033[0m"
-LOG_DIR='/tmp'
-INTERFACE=""
-MY_IP=""
-NETWORK=""
-LOG_FILE=""
+banner_script() {
+  echo "==========================================================="
+  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo "                                                           "
+  echo "   Script : Scanner network hosts up                       "
+  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo "==========================================================="
+  echo
+}
 
 # ------------------------------------------------------------------------------
-# Log / Affichage
+# Logging Helpers
 # ------------------------------------------------------------------------------
+readonly RED="\033[0;31m"
+readonly GREEN="\033[0;32m"
+readonly YELLOW="\033[0;33m"
+readonly CYAN="\033[0;36m"
+readonly RESET="\033[0m"
+ 
 log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
 log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; }
 log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
 log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*"; }
 
 # ------------------------------------------------------------------------------
+# Constantes & Variables
+# ------------------------------------------------------------------------------
+readonly LOG_DIR='/tmp'
+INTERFACE=""
+MY_IP=""
+NETWORK=""
+LOG_FILE=""
+
+# ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-usage() {
+show_help() {
   echo "Usage: $(basename "$0")"
   exit 0
-}
-
-header_script() {
-  echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
-  echo "                                                           "
-  echo "   Script : netopsys-scan-network-hosts-up.sh - Scanner Network Hosts Up      "
-  echo "   Author : netopsys (https://github.com/netopsys)         "
-  echo "==========================================================="
-  echo
 }
 
 warning_script() {
@@ -57,9 +60,10 @@ warning_script() {
   echo -e "or for which you have explicit authorization. Any unauthorized use"
   echo -e "may be illegal and lead to prosecution."
   echo -e "You are solely responsible for the use of this tool."
-  read -rp "➤ Confirm you want to continue? (y/n): " CONFIRM
+  read -rp "➤ Confirm you want to continue? [Y/n] : " CHOICE
+  CHOICE="${CHOICE:-y}"
 
-  if [[ "$CONFIRM" != "y" ]]; then
+  if [[ "$CHOICE" != "y" ]]; then
     log_warn "Operation aborted by user."
     exit 0
   fi
@@ -143,8 +147,9 @@ scan_ports() {
 }
 
 cleanup_logs() {
-  read -rp "➤ Delete log file $LOG_FILE? (y/n): " confirm
-  if [[ "$confirm" == "y" ]]; then
+  read -rp "➤ Delete log file $LOG_FILE? [Y/n] : " CHOICE
+  CHOICE="${CHOICE:-y}"
+  if [[ "$CHOICE" == "y" ]]; then
     rm -f "$LOG_FILE"
     log_ok "Log file deleted."
   else
@@ -157,29 +162,36 @@ cleanup_logs() {
 # ------------------------------------------------------------------------------
 main() {
 
+  if [[ $# -gt 0 ]]; then
+    log_error "No require Options"
+    show_help
+  fi
+
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -h|--help) usage ;; 
+      -h|--help) show_help ;; 
     esac
     shift
   done
 
-  header_script
+  banner_script  
   warning_script
   check_root
   check_dependencies
   select_interface
   set_network_info
 
-  read -rp "➤ Scan for live hosts? (y/n): " confirm
-  if [[ "$confirm" == "y" ]]; then
+  read -rp "➤ Scan for live hosts? [Y/n] : " CHOICE
+  CHOICE="${CHOICE:-y}"
+  if [[ "$CHOICE" == "y" ]]; then
     scan_hosts_up
   else
     log_warn "Scan skipped"
   fi
 
-  read -rp "➤ Scan ports on discovered hosts? (y/n): " confirm
-  if [[ "$confirm" == "y" ]]; then
+  read -rp "➤ Scan ports on discovered hosts? [Y/n] : " CHOICE
+  CHOICE="${CHOICE:-y}"
+  if [[ "$CHOICE" == "y" ]]; then
     scan_ports
   else
     log_warn "Port scan skipped."

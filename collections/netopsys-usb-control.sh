@@ -8,20 +8,29 @@
 # ============================================================================
 
 set -euo pipefail
-trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 
 # ------------------------------------------------------------------------------
-# Variables
+# Banner
+# ------------------------------------------------------------------------------
+banner_script() {
+  echo "==========================================================="
+  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo "                                                           "
+  echo "   Script : Manage USB Access with USBGuard                "
+  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo "==========================================================="
+  echo
+}
+
+# ------------------------------------------------------------------------------
+# Logging Helpers
 # ------------------------------------------------------------------------------
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[0;33m"
 readonly CYAN="\033[0;36m"
 readonly RESET="\033[0m"
-
-# ------------------------------------------------------------------------------
-# Log / Affichage
-# ------------------------------------------------------------------------------
+ 
 log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
 log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; }
 log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
@@ -30,35 +39,21 @@ log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*";
 # ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-usage() {
+show_help() {
   cat << EOF
 Usage:
  $(basename "$0") [options]
 
 Options:
   -h, --help        Show this help message
-  --dry-run         Only list USB devices, take no action
-  --json            Output device list in JSON format
+  --list            Only list USB devices, take no action
 
 Examples:
   $(basename "$0")             Interactively allow/block USB devices
   $(basename "$0") --list      Just list USB devices 
 
-Requirements:
-  - Must be run as root
-  - 'usbguard' must be installed
 EOF
   exit 0
-}
-
-header_script() {
-  echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
-  echo "                                                           "
-  echo "   Script : netopsys-usb-control.sh - Manage USB Access with USBGuard  "
-  echo "   Author : netopsys (https://github.com/netopsys)         "
-  echo "==========================================================="
-  echo
 }
 
 check_root() {
@@ -116,13 +111,17 @@ list_devices() {
   fi
 }
 
-interactive_mode() {
+select_action() {
   echo
   read -rp "➤ Action: Allow or Block device? (a/b): " CHOICE
-  [[ "$CHOICE" =~ ^[ab]$ ]] || { log_error "Invalid choice"; exit 1; }
+
+  if [[ "$CHOICE" == "a" && "$CHOICE" == "b" ]]; then
+    log_error "Invalid choice"; exit 1; 
+  fi
 
   read -rp "➤ Select device ID: " DEVICE_ID
-  read -rp "➤ Confirm $([[ $CHOICE == "a" ]] && echo allow || echo block) device ID=$DEVICE_ID? (y/n): " CONFIRM
+  read -rp "➤ Confirm $([[ $CHOICE == "a" ]] && echo allow || echo block) device ID=$DEVICE_ID? [Y/n] : " CONFIRM
+  CONFIRM="${CONFIRM:-y}"
 
   if [[ "$CONFIRM" != "y" ]]; then
     log_warn "Operation aborted by user."
@@ -153,17 +152,17 @@ main() {
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -h|--help) usage ;;
+      -h|--help) show_help ;;
       --list) LIST=true ;;
     esac
     shift
   done
 
-  header_script
+  banner_script  
   check_root
   check_dependencies
   list_devices 
-  interactive_mode 
+  select_action 
 }
 
 main "$@"

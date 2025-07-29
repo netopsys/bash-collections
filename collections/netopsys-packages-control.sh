@@ -2,50 +2,53 @@
 #
 # ==============================================================================
 # Script Name : netopsys-packages_control.sh
-# Description : Display installed or upgradable packages with version, dependencies and license info, list top 20 licenses.
+# Description : Display infos packages (version, dependencies, license...etc)
 # Author      : netopsys (https://github.com/netopsys)
 # License     : GPL-3.0 
 # ==============================================================================
  
 set -euo pipefail
-trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 
 # ------------------------------------------------------------------------------
-# Variables
+# Banner
+# ------------------------------------------------------------------------------
+banner_script() {
+  echo "==========================================================="
+  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo "                                                           "
+  echo "   Script : Display infos packages                         "
+  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo "==========================================================="
+  echo
+}
+
+# ------------------------------------------------------------------------------
+# Logging Helpers
 # ------------------------------------------------------------------------------
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[1;33m"
 readonly CYAN="\033[0;36m"
 readonly RESET="\033[0m" 
-declare -A LICENSE_COUNT=0
-declare -A TOTAL_PACKAGES=0
-declare -A TOTAL_SIZE=0
-
-# ------------------------------------------------------------------------------
-# Log / Affichage
-# ------------------------------------------------------------------------------
+ 
 log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
 log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; }
 log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
 log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*"; }
 
 # ------------------------------------------------------------------------------
+# Constantes & Variables
+# ------------------------------------------------------------------------------
+declare -A LICENSE_COUNT=0
+declare -A TOTAL_PACKAGES=0
+declare -A TOTAL_SIZE=0
+
+# ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-usage() {
+show_help() {
   echo "Usage: $(basename "$0") [--installed | --upgradable | --debug | --help]"
   exit 0
-}
-
-header_script() {
-  echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
-  echo "                                                           "
-  echo "   Script : netopsys-packages-control - Display infos packages      "
-  echo "   Author : netopsys (https://github.com/netopsys)         "
-  echo "==========================================================="
-  echo
 }
 
 check_command() {
@@ -134,42 +137,49 @@ run_audit() {
 # Main script logic
 # ------------------------------------------------------------------------------
 main() {
-  header_script
 
-case "$1" in
-  --installed)
-    echo -e "${YELLOW}Installed packages:${RESET}"
-    mapfile -t pkgs < <(dpkg-query -W -f='${binary:Package}\n' | sort)
-    run_audit "installed"
-    ;;
-  --upgradable)
-    echo -e "${YELLOW}Upgradable packages:${RESET}"
-    mapfile -t pkgs < <(apt list --upgradable 2>/dev/null | grep -v "^Listing" | cut -d/ -f1)
-    run_audit "upgradable"  
-    ;;
-  --filter)
-    if [[ -n "$2" ]]; then
-      target_pkg="$2"
-      shift 2
-      echo -e "${YELLOW}Filter package:${RESET}"
-      mapfile -t pkgs < <(dpkg-query -W -f='${binary:Package}\n' | sort)
-      run_audit "$target_pkg"
-    else
-      log_error "L'option $1 nécessite un argument."
-      usage
-    fi
-    ;;
-  --debug)
-    set -x
-    echo -e "${YELLOW}Installed packages:${RESET}"
-    mapfile -t pkgs < <(dpkg-query -W -f='${binary:Package}\n' | sort)
-    run_audit "installed" 
-    ;;
-  -h|--help | *)
-    usage
-    ;;
-esac
+  if [[ $# -eq 0 ]]; then
+    log_error "Missing Options"
+    show_help
+  fi
 
+  banner_script
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --installed)
+        echo -e "${YELLOW}Installed packages:${RESET}"
+        mapfile -t pkgs < <(dpkg-query -W -f='${binary:Package}\n' | sort)
+        run_audit "installed"
+        ;;
+      --upgradable)
+        echo -e "${YELLOW}Upgradable packages:${RESET}"
+        mapfile -t pkgs < <(apt list --upgradable 2>/dev/null | grep -v "^Listing" | cut -d/ -f1)
+        run_audit "upgradable"  
+        ;;
+      --filter)
+        if [[ -n "$2" ]]; then
+          target_pkg="$2"
+          shift 2
+          echo -e "${YELLOW}Filter package:${RESET}"
+          mapfile -t pkgs < <(dpkg-query -W -f='${binary:Package}\n' | sort)
+          run_audit "$target_pkg"
+        else
+          log_error "L'option $1 nécessite un argument."
+          show_help
+        fi
+        ;;
+      --debug)
+        set -x
+        echo -e "${YELLOW}Installed packages:${RESET}"
+        mapfile -t pkgs < <(dpkg-query -W -f='${binary:Package}\n' | sort)
+        run_audit "installed" 
+        ;;
+      -h|--help | *)
+        show_help
+        ;;
+    esac
+  done
 }
 
 main "$@"

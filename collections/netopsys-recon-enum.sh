@@ -1,32 +1,37 @@
 #!/bin/bash
 
 #===============================================================================
-# SCRIPT NAME : netopsys-recon-enum.sh
-# DESCRIPTION : Automatic reconnaissance phase on a network target.
-# AUTHOR      : netopsys
+# Script Name  : netopsys-recon-enum.sh
+# Description : Automatic reconnaissance phase on a network target.
+# Author      : netopsys
 # License     : GPL-3.0 
 # REQUIREMENTS: whois, geoiplookup(geoip-bin), host, nslookup, dig, ping, traceroute
 #===============================================================================
 
 # set -euo pipefail
-trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 
 # ------------------------------------------------------------------------------
-# Variables
+# Banner
+# ------------------------------------------------------------------------------
+banner_script() {
+  echo "==========================================================="
+  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo "                                                           "
+  echo "   Script : Automatic reconnaissance phase on a network target.     "
+  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo "==========================================================="
+  echo
+}
+
+# ------------------------------------------------------------------------------
+# Logging Helpers
 # ------------------------------------------------------------------------------
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[0;33m"
 readonly CYAN="\033[0;36m"
 readonly RESET="\033[0m"
-target=""
-log_enabled=false
-output_dir=""
-ip_target=""
-
-# ------------------------------------------------------------------------------
-# Logging / Display
-# ------------------------------------------------------------------------------
+ 
 log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
 log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; }
 log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
@@ -34,9 +39,17 @@ log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*";
 section()   { echo -e "---------------------- ${YELLOW}$*${RESET} -----------------------------------"; }
 
 # ------------------------------------------------------------------------------
+# Constantes & Variables
+# ------------------------------------------------------------------------------
+target=""
+log_enabled=false
+output_dir=""
+ip_target=""
+
+# ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-usage() {
+show_help() {
   cat << EOF
 Usage:
   $(basename "$0") -t <target> [--log]
@@ -51,16 +64,7 @@ Examples:
   $(basename "$0") -t example.com
   $(basename "$0") --target example.com --log
 EOF
-}
-
-header_script() {
-  echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
-  echo "                                                           "
-  echo "   Script : netopsys-recon-enum.sh - Automatic reconnaissance phase on a network target.     "
-  echo "   Author : netopsys (https://github.com/netopsys)         "
-  echo "==========================================================="
-  echo
+  exit 0
 }
 
 warning_script() {
@@ -70,9 +74,10 @@ warning_script() {
   echo -e "or for which you have explicit authorization. Any unauthorized use"
   echo -e "may be illegal and lead to prosecution."
   echo -e "You are solely responsible for the use of this tool."
-  read -rp "➤ Confirm you want to continue? (y/n): " CONFIRM
+  read -rp "➤ Confirm you want to continue? [Y/n] : " CHOICE
+  CHOICE="${CHOICE:-y}"
 
-  if [[ "$CONFIRM" != "y" ]]; then
+  if [[ "$CHOICE" != "y" ]]; then
     log_warn "Operation aborted by user."
     exit 0
   fi
@@ -145,7 +150,7 @@ check_dns() {
     host "$target"
     nslookup "$target"
     dig "$target" ANY +short
-    dig "$target" ANY +noall +answer
+    dig "$target" ANY +noall +CHOICE
     dig A "$target" +short
     dig MX "$target" +short
     dig NS "$target" +short
@@ -182,8 +187,8 @@ check_traceroute() {
 main() {
 
   if [[ $# -eq 0 ]]; then
-    usage
-    exit 1
+    log_error "Missing Options"
+    show_help
   fi
 
   while [[ $# -gt 0 ]]; do
@@ -198,30 +203,26 @@ main() {
           shift 2
         else
           log_error "Option $1 requires an argument."
-          usage
-          exit 1
+          show_help
         fi
         ;;
       -h|--help)
-        usage
-        exit 0
+        show_help
         ;;
       *)
         log_error "Unknown option: $1"
-        usage
-        exit 1
+        show_help
         ;;
     esac
   done
 
   if [[ -z "$target" ]]; then
     log_error "Missing target."
-    usage
-    exit 1
+    show_help
   fi
 
   check_root
-  header_script
+  banner_script  
   warning_script
   check_dependencies
   start_script
