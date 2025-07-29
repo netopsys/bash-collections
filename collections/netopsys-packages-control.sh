@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # ==============================================================================
-# Script Name : packages_control.sh
+# Script Name : netopsys-packages_control.sh
 # Description : Display installed or upgradable packages with version, dependencies and license info, list top 20 licenses.
 # Author      : netopsys (https://github.com/netopsys)
 # License     : gpl-3.0
@@ -10,9 +10,9 @@
 set -euo pipefail
 trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Variables
-# ============================================================================
+# ------------------------------------------------------------------------------
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[1;33m"
@@ -27,12 +27,22 @@ log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*";
 declare -A LICENSE_COUNT=0
 declare -A TOTAL_PACKAGES=0
 declare -A TOTAL_SIZE=0
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Functions
-# ============================================================================
+# ------------------------------------------------------------------------------
 usage() {
   echo "Usage: $0 [--installed | --upgradable | --debug | --help]"
   exit 0
+}
+
+header_script() {
+  echo "==========================================================="
+  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo "                                                           "
+  echo "   Script : netopsys-packages-control - Display infos packages      "
+  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo "==========================================================="
+  echo
 }
 
 check_command() {
@@ -109,18 +119,11 @@ run_audit() {
   print_summary
 }
 
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Main script logic
-# ============================================================================
+# ------------------------------------------------------------------------------
 main() {
-
-echo "==========================================================="
-echo "🛡️  NETOPSYS - Bash Collections                            "
-echo "                                                           "
-echo "   Script : packages-control - Display infos packages      "
-echo "   Author : netopsys (https://github.com/netopsys)         "
-echo "==========================================================="
-echo
+  header_script
 
 case "$1" in
   --installed)

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # ==============================================================================
-# Script Name : usb-control.sh
+# Script Name : netopsys-usb-control.sh
 # Description : Manage USB Access with USBGuard.
 # Author      : netopsys
 # License     : gpl-3.0
@@ -10,9 +10,9 @@
 set -euo pipefail
 trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Variables
-# ============================================================================
+# ------------------------------------------------------------------------------
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[0;33m"
@@ -24,9 +24,9 @@ log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; 
 log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
 log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*"; }
 
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Functions
-# ============================================================================
+# ------------------------------------------------------------------------------
 usage() {
   cat << EOF
 Usage:
@@ -46,6 +46,16 @@ Requirements:
   - 'usbguard' must be installed
 EOF
   exit 0
+}
+
+header_script() {
+  echo "==========================================================="
+  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo "                                                           "
+  echo "   Script : netopsys-usb-control - Manage USB Access with USBGuard  "
+  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo "==========================================================="
+  echo
 }
 
 check_root() {
@@ -130,9 +140,9 @@ interactive_mode() {
 
 }
 
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Main script logic
-# ============================================================================
+# ------------------------------------------------------------------------------
 main() {
   OUTPUT_JSON=true
   LIST=false
@@ -145,14 +155,7 @@ main() {
     shift
   done
 
-  echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
-  echo "                                                           "
-  echo "   Script : usb-control - Manage USB Access with USBGuard  "
-  echo "   Author : netopsys (https://github.com/netopsys)         "
-  echo "==========================================================="
-  echo
-
+  header_script
   check_root
   check_dependencies
   list_devices 

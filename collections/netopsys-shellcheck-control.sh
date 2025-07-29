@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==============================================================================
-# Script Name : shellcheck-control.sh 
+# Script Name : netopsys-shellcheck-control.sh 
 # Description : Check Quality Script Bash 
 # Author      : netopsys (https://github.com/netopsys)
 # License     : gpl-3.0
@@ -10,9 +10,9 @@
 set -euo pipefail
 trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Variables
-# ============================================================================
+# ------------------------------------------------------------------------------
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[0;33m"
@@ -46,6 +46,16 @@ Requirements:
 
 EOF
   exit 0
+}
+
+header_script() {
+  echo "==========================================================="
+  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo "                                                           "
+  echo "   Script : shellcheck-control - Check Quality Scripts Bash"
+  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo "==========================================================="
+  echo
 }
 
 check_root() {
@@ -115,10 +125,12 @@ check_shellcheck() {
   fi
 }
 
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Main script logic
-# ============================================================================
+# ------------------------------------------------------------------------------
 main() {
+
+  header_script
 
   if [[ $# -eq 0 ]]; then
     usage
@@ -132,14 +144,6 @@ main() {
     esac
     shift
   done
-  
-  echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
-  echo "                                                           "
-  echo "   Script : shellcheck-control - Check Quality Scripts Bash"
-  echo "   Author : netopsys (https://github.com/netopsys)         "
-  echo "==========================================================="
-  echo
 
   check_root
   check_dependencies

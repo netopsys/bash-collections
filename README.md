@@ -8,12 +8,12 @@
 
 ## Contents
 
-| Collections                 | Scripts                  | Description                                   |
-|-----------------------------|--------------------------|-----------------------------------------------| 
-|                             | `packages-control.sh`    | Display infos packages                        |
-|                             | `shellcheck-control.sh`  | Check Quality Scripts Bash                    |
-|                             | `usb-control.sh`         | Manage USB device access using USBGuard       |
-| _More scripts coming soon_  |                          |
+| Collections                 | Scripts                           | Description                                   |
+|-----------------------------|-----------------------------------|-----------------------------------------------| 
+|                             | `netopsys-packages-control.sh`    | Display infos packages (Deb)                  |
+|                             | `netopsys-shellcheck-control.sh`  | Check quality scripts bash                    |
+|                             | `netopsys-usb-control.sh`         | Manage USB device access                      |
+| _More scripts coming soon_  |                                   |
 
 ## Requirements
 

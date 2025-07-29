@@ -18,9 +18,9 @@ log_info()    { echo -e "${CYAN}[INFO]${RESET} $*"; }
 log_success() { echo -e "${GREEN}[OK]${RESET} $*"; }
 log_error()   { echo -e "${RED}[ERROR]${RESET} $*" >&2; }
 
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Functions
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Git commit types convention (Conventional Commits)
 show_commit_conventions() {
   cat << EOF
@@ -48,13 +48,14 @@ check_signing_key() {
   fi
 }
 
-# ============================================================================
+# ------------------------------------------------------------------------------
 # Main script logic
-# ============================================================================
+# ------------------------------------------------------------------------------
 log_info "git log pretty..."
-git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 20
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
+
 log_info "git log graph..."
-git log --oneline --graph --decorate --all -n 20
+git log --oneline --graph --decorate --all -n 5
 
 if [[ -n $(git status --porcelain) ]]; then
   git status
@@ -95,6 +96,7 @@ else
 fi
 
 log_info "git log pretty..."
-git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 20
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
+
 log_info "git log graph..."
-git log --oneline --graph --decorate --all -n 20
+git log --oneline --graph --decorate --all -n 5

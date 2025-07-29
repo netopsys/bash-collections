@@ -52,9 +52,9 @@ echo "[+] README.md updated to version $version"
 
 # Git: create Release tag and push
 echo "[+] git log pretty..."
-git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 20
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
 echo "[+] git log graph..."
-git log --oneline --graph --decorate --all -n 20
+git log --oneline --graph --decorate --all -n 5
 
 if [[ -n $(git status --porcelain) ]]; then
   echo "[+] Bump version to v$new_version"
@@ -69,6 +69,6 @@ else
 fi
 
 echo "[+] git log pretty..."
-git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 20
+git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
 echo "[+] git log graph..."
-git log --oneline --graph --decorate --all -n 20
+git log --oneline --graph --decorate --all -n 5
