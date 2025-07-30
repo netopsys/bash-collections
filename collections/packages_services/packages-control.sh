@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # ==============================================================================
-# Script Name : netopsys-packages_control.sh
+# Script Name : packages-control.sh
 # Description : Display infos packages (version, dependencies, license...etc)
 # Author      : netopsys (https://github.com/netopsys)
 # License     : GPL-3.0 
@@ -46,10 +46,6 @@ declare -A TOTAL_SIZE=0
 # ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-show_help() {
-  echo "Usage: $(basename "$0") [--installed | --upgradable | --debug | --help]"
-  exit 0
-}
 
 check_command() {
   if ! command -v "$1" &>/dev/null; then
@@ -133,6 +129,12 @@ run_audit() {
   print_summary
 }
 
+# Print usage help.
+print_usage() {
+  echo "Usage: $(basename "$0") [--installed | --upgradable | --debug | --help]"
+  exit 0
+}
+
 # ------------------------------------------------------------------------------
 # Main script logic
 # ------------------------------------------------------------------------------
@@ -140,7 +142,7 @@ main() {
 
   if [[ $# -eq 0 ]]; then
     log_error "Missing Options"
-    show_help
+    print_usage
   fi
 
   banner_script
@@ -166,7 +168,7 @@ main() {
           run_audit "$target_pkg"
         else
           log_error "L'option $1 nécessite un argument."
-          show_help
+          print_usage
         fi
         ;;
       --debug)
@@ -176,7 +178,7 @@ main() {
         run_audit "installed" 
         ;;
       -h|--help | *)
-        show_help
+        print_usage
         ;;
     esac
   done

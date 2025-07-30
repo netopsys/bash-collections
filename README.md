@@ -1,4 +1,4 @@
-# Bash Scripts Collection - by netopsys
+# Bash Collection - by netopsys
 
 ![Lint](https://github.com/netopsys/netopsys-bash-collections/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)
@@ -8,14 +8,16 @@
 
 ## Contents
 
-| Collections                 | Scripts                             | Description                                                            |
-|-----------------------------|-------------------------------------|------------------------------------------------------------------------| 
-|                             | `netopsys-packages-control.sh`      | Display infos packages (Deb)                                           |
-|                             | `netopsys-shellcheck-control.sh`    | Check quality scripts bash                                             |
-|                             | `netopsys-usb-control.sh`           | Manage USB device access                                               |
-|                             | `netopsys-recon-enum.sh`            | Automatic reconnaissance phase on a network target                     |
-|                             | `netopsys-scan-network-hosts-up.sh` | Scanner Network Hosts Up                                               |
-| _More scripts coming soon_  |                                     |
+| Collections                 | Scripts                    | Description                                                            |
+|-----------------------------|----------------------------|------------------------------------------------------------------------| 
+| system                      |                            |                                                                        |
+| network                     | `scan-network-hosts-up.sh` | Scanner Network Hosts up                                               |
+| disk & storage              |                            |                                                                        |
+| packages & services         | `packages-control.sh`      | Display infos packages (Deb)                                           |
+| security                    | `usb-control.sh`           | Manage USB device access                                               |
+|                             | `recon-enum.sh`            | Automatic reconnaissance phase on a network target                     |
+| tools                       | `shellcheck-control.sh`    | Check quality scripts bash                                             |
+| _More scripts coming soon_  |                            |                                                                        |
 
 ## Requirements
 

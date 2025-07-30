@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # ==============================================================================
-# Script Name : netopsys-usb-control.sh
+# Script Name : usb-control.sh
 # Description : Manage USB Access with USBGuard.
 # Author      : netopsys
 # License     : GPL-3.0 
@@ -39,22 +39,6 @@ log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*";
 # ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-show_help() {
-  cat << EOF
-Usage:
- $(basename "$0") [options]
-
-Options:
-  -h, --help        Show this help message
-  --list            Only list USB devices, take no action
-
-Examples:
-  $(basename "$0")             Interactively allow/block USB devices
-  $(basename "$0") --list      Just list USB devices 
-
-EOF
-  exit 0
-}
 
 check_root() {
   if [[ "$EUID" -ne 0 ]]; then
@@ -143,6 +127,24 @@ select_action() {
 
 }
 
+# Print usage help.
+print_usage() {
+  cat << EOF
+Usage:
+ $(basename "$0") [options]
+
+Options:
+  -h, --help        Show this help message
+  --list            Only list USB devices, take no action
+
+Examples:
+  $(basename "$0")             Interactively allow/block USB devices
+  $(basename "$0") --list      Just list USB devices 
+
+EOF
+  exit 0
+}
+
 # ------------------------------------------------------------------------------
 # Main script logic
 # ------------------------------------------------------------------------------
@@ -152,7 +154,7 @@ main() {
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -h|--help) show_help ;;
+      -h|--help) print_usage ;;
       --list) LIST=true ;;
     esac
     shift

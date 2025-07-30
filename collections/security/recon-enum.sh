@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #===============================================================================
-# Script Name  : netopsys-recon-enum.sh
+# Script Name  : recon-enum.sh
 # Description : Automatic reconnaissance phase on a network target.
 # Author      : netopsys
 # License     : GPL-3.0 
@@ -49,23 +49,6 @@ ip_target=""
 # ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-show_help() {
-  cat << EOF
-Usage:
-  $(basename "$0") -t <target> [--log]
-  $(basename "$0") -h | --help
-
-Options:
-  -t, --target <target>  Target.
-  --log                  Enables result logging into /tmp/<timestamp>_report_pentest_reconnaissance
-  -h, --help             Show this help message.
-
-Examples:
-  $(basename "$0") -t example.com
-  $(basename "$0") --target example.com --log
-EOF
-  exit 0
-}
 
 warning_script() {
   echo -e "${YELLOW}[!] Responsibility warning${RESET}"
@@ -113,7 +96,7 @@ check_dependencies() {
 
 start_script() {
   if [[ "$log_enabled" == true ]]; then
-    output_dir="/tmp/$(date +'%Y%m%d_%H%M%S')_report_pentest_reconnaissance"
+    output_dir="/tmp/$(date +'%Y%m%d-%H%M%S')-report-pentest-recon"
     mkdir -p "$output_dir"
     log_info "Logging enabled: $output_dir"
   fi
@@ -181,6 +164,24 @@ check_traceroute() {
   fi
 }
 
+# Print usage help.
+print_usage() {
+  cat << EOF
+Usage:
+  $(basename "$0") -t <target> [--log]
+  $(basename "$0") -h | --help
+
+Options:
+  -t, --target <target>  Target.
+  --log                  Enables result logging into /tmp/<timestamp>_report_pentest_reconnaissance
+  -h, --help             Show this help message.
+
+Examples:
+  $(basename "$0") -t example.com
+  $(basename "$0") --target example.com --log
+EOF
+  exit 0
+}
 # ------------------------------------------------------------------------------
 # Main script logic
 # ------------------------------------------------------------------------------
@@ -188,7 +189,7 @@ main() {
 
   if [[ $# -eq 0 ]]; then
     log_error "Missing Options"
-    show_help
+    print_usage
   fi
 
   while [[ $# -gt 0 ]]; do
@@ -203,22 +204,22 @@ main() {
           shift 2
         else
           log_error "Option $1 requires an argument."
-          show_help
+          print_usage
         fi
         ;;
       -h|--help)
-        show_help
+        print_usage
         ;;
       *)
         log_error "Unknown option: $1"
-        show_help
+        print_usage
         ;;
     esac
   done
 
   if [[ -z "$target" ]]; then
     log_error "Missing target."
-    show_help
+    print_usage
   fi
 
   check_root

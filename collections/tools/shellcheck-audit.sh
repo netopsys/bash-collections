@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==============================================================================
-# Script Name : netopsys-shellcheck-control.sh 
+# Script Name : shellcheck-control.sh 
 # Description : Check Quality Script Bash 
 # Author      : netopsys (https://github.com/netopsys)
 # License     : GPL-3.0 
@@ -25,6 +25,7 @@ banner_script() {
 # ------------------------------------------------------------------------------
 # Logging Helpers
 # ------------------------------------------------------------------------------
+readonly CYAN='\033[0;36m'
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[0;33m" 
@@ -38,21 +39,6 @@ log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*";
 # ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-show_help() {
-  cat << EOF
-Usage: $(basename "$0") [options]
-
-Options:
-  -h, --help        Show this help message 
-  -p, --path        Path directory to check
-
-Examples:
-  $(basename "$0") --help 
-  $(basename "$0") -p <path_directory> 
-
-EOF
-  exit 0
-}
 
 check_root() {
   if [[ "$EUID" -ne 0 ]]; then
@@ -81,15 +67,15 @@ check_dependencies() {
 score_to_grade() {
   local score=$1
   if (( score >= 90 )); then
-    echo "5"
+    echo "⭐⭐⭐⭐⭐"
   elif (( score >= 75 )); then
-    echo "4"
+    echo "⭐⭐⭐⭐☆"
   elif (( score >= 50 )); then
-    echo "3"
+    echo "⭐⭐⭐☆☆"
   elif (( score >= 25 )); then
-    echo "2"
+    echo "⭐⭐☆☆☆"
   else
-    echo "1"
+    echo "⭐☆☆☆☆"
   fi
 }
 
@@ -121,6 +107,22 @@ check_shellcheck() {
   fi
 }
 
+# Print usage help.
+print_usage() {
+  cat << EOF
+Usage: $(basename "$0") [options]
+
+Options:
+  -h, --help        Show this help message 
+  -p, --path        Path directory to check
+
+Examples:
+  $(basename "$0") --help 
+  $(basename "$0") -p <path_directory> 
+
+EOF
+  exit 0
+}
 # ------------------------------------------------------------------------------
 # Main script logic
 # ------------------------------------------------------------------------------
@@ -128,7 +130,7 @@ main() {
 
   if [[ $# -lt 2 ]]; then
     log_error "Missing Options"
-    show_help
+    print_usage
   fi
 
   local DIR="$2"
@@ -141,15 +143,15 @@ main() {
           shift 2
         else
           log_error "Option $1 requires an argument."
-          show_help
+          print_usage
         fi
         ;;
       -h|--help) 
-        show_help
+        print_usage
         ;;
       *)
         log_error "Unknown option: $1"
-        show_help
+        print_usage
         ;;
     esac
   done
@@ -161,7 +163,7 @@ main() {
   # Check is directory
   if [[ ! -d "$DIR" ]]; then
     log_error " '$DIR' is not a valid directory."
-    show_help 
+    print_usage 
   fi
 
   # Get files
@@ -177,7 +179,7 @@ main() {
   local COUNT=0
 
   # Check Quality Script Bash
-  echo "Scan shellcheck : $DIR"
+  log_info "Shellcheck $DIR"
   for file in "${sh_files[@]}"; do 
 
     shellcheck_score=$(check_shellcheck "$file")

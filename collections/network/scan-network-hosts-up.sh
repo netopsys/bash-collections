@@ -48,10 +48,6 @@ LOG_FILE=""
 # ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-show_help() {
-  echo "Usage: $(basename "$0")"
-  exit 0
-}
 
 warning_script() {
   echo -e "${YELLOW}[!] Responsibility warning${RESET}"
@@ -89,6 +85,7 @@ check_dependencies() {
 
   log_ok "All dependencies are installed."
 }
+
 get_interfaces() {
   ip -o link show | awk -F': ' '{print $2}' | grep -v 'lo'
 }
@@ -157,19 +154,24 @@ cleanup_logs() {
   fi
 }
 
+# Print usage help.
+print_usage() {
+  echo "Usage: $(basename "$0")"
+  exit 0
+}
+
 # ------------------------------------------------------------------------------
 # Main script logic
 # ------------------------------------------------------------------------------
 main() {
 
   if [[ $# -gt 0 ]]; then
-    log_error "No require Options"
-    show_help
+    print_usage
   fi
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -h|--help) show_help ;; 
+      -h|--help) print_usage ;; 
     esac
     shift
   done
