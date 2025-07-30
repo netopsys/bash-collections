@@ -1,8 +1,8 @@
-# Bash Collection - by netopsys
+# Bash Collections - by netopsys
 
 ![Lint](https://github.com/netopsys/netopsys-bash-collections/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)
-![Version](https://img.shields.io/badge/version-0.12.0-blue.svg?style=flat-square&logoColor=white)
+![Version](https://img.shields.io/badge/version-0.13.0-blue.svg?style=flat-square&logoColor=white)
 
 > A curated collection of clean, secure, and production-ready Bash scripts for sysadmins, DevOps, and power users.
 
@@ -10,13 +10,13 @@
 
 | Collections                 | Scripts                    | Description                                                            |
 |-----------------------------|----------------------------|------------------------------------------------------------------------| 
-| system                      |                            |                                                                        |
-| network                     | `scan-network-hosts-up.sh` | Scanner Network Hosts up                                               |
-| disk & storage              |                            |                                                                        |
-| packages & services         | `packages-control.sh`      | Display infos packages (Deb)                                           |
-| security                    | `usb-control.sh`           | Manage USB device access                                               |
+| *System*                    |                            |                                                                        |
+| *Network*                   | `scan-network-hosts-up.sh` | Scanner Network Hosts up                                               |
+| *Disk & Storage*            |                            |                                                                        |
+| *Packages & Services*       | `packages-control.sh`      | Display infos packages (Deb)                                           |
+| *Security*                  | `usb-control.sh`           | Manage USB device access                                               |
 |                             | `recon-enum.sh`            | Automatic reconnaissance phase on a network target                     |
-| tools                       | `shellcheck-control.sh`    | Check quality scripts bash                                             |
+| *Tools*                     | `shellcheck-control.sh`    | Check quality scripts bash                                             |
 | _More scripts coming soon_  |                            |                                                                        |
 
 ## Requirements
