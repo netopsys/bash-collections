@@ -6,3 +6,5 @@
 
 # System
 .DS_Store
+tools/*
+bump-version.sh
