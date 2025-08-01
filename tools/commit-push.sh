@@ -19,6 +19,11 @@ log_success() { echo -e "${GREEN}[OK]${RESET} $*"; }
 log_error()   { echo -e "${RED}[ERROR]${RESET} $*" >&2; }
 
 # ------------------------------------------------------------------------------
+# Constants & Variables
+# ------------------------------------------------------------------------------
+readonly SCRIPT_ROOT="tools"
+
+# ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
 # Git commit types convention (Conventional Commits)
@@ -51,6 +56,14 @@ check_signing_key() {
 # ------------------------------------------------------------------------------
 # Main script logic
 # ------------------------------------------------------------------------------
+
+base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ ! -d "$base_dir" ]]; then
+  log_error "Directory '$base_dir' not found."
+  exit 1
+fi
+ 
 log_info "git log pretty..."
 git log --pretty=format:"%h | %ad | %an | %ae | %s %d" --date=iso -n 5
 

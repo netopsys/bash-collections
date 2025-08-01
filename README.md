@@ -9,11 +9,12 @@
 ## Contents
 
 | Collections                 | Scripts                    | Description                                                            |
-|-----------------------------|----------------------------|------------------------------------------------------------------------| 
+|-----------------------------|----------------------------|------------------------------------------------------------------------|
+| *Adb*                       | `devices-info.sh`          | Android device infos (adb)                                             | 
 | *System*                    |                            |                                                                        |
-| *Network*                   | `scan-network-hosts-up.sh` | Scanner Network Hosts up                                               |
+| *Network*                   | `hosts-up.sh`              | Scanner Network Hosts up                                               |
 | *Disk & Storage*            |                            |                                                                        |
-| *Packages & Services*       | `packages-control.sh`      | Display infos packages (Deb)                                           |
+| *Packages & Services*       | `packages-info.sh`         | Packages infos (.deb)                                                  |
 | *Security*                  | `usb-control.sh`           | Manage USB device access                                               |
 |                             | `recon-enum.sh`            | Automatic reconnaissance phase on a network target                     |
 | *Tools*                     | `shellcheck-control.sh`    | Check quality scripts bash                                             |

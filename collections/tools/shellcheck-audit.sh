@@ -109,6 +109,7 @@ check_shellcheck() {
 
 # Print usage help.
 print_usage() {
+echo ""
   cat << EOF
 Usage: $(basename "$0") [options]
 
@@ -129,7 +130,6 @@ EOF
 main() {
 
   if [[ $# -lt 2 ]]; then
-    log_error "Missing Options"
     print_usage
   fi
 
