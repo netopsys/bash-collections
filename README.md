@@ -10,7 +10,7 @@
 
 | Collections                 | Scripts                    | Description                                                            |
 |-----------------------------|----------------------------|------------------------------------------------------------------------|
-| *Adb*                       | `devices-info.sh`          | Android device infos (adb)                                             | 
+| *Mobile*                    | `devices-info.sh`          | Android device infos (adb)                                             | 
 | *System*                    |                            |                                                                        |
 | *Network*                   | `hosts-up.sh`              | Scanner Network Hosts up                                               |
 | *Disk & Storage*            |                            |                                                                        |
