@@ -2,7 +2,7 @@
 
 ![Lint](https://github.com/netopsys/netopsys-bash-collections/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)
-![Version](https://img.shields.io/badge/version-0.17.0-blue.svg?style=flat-square&logoColor=white)
+![Version](https://img.shields.io/badge/version-0.18.0-blue.svg?style=flat-square&logoColor=white)
 
 > A curated collection of clean, secure, and production-ready Bash scripts for sysadmins, DevOps, and power users.
 
@@ -11,7 +11,7 @@
 | Collections                 | Scripts                    | Description                                                            |
 |-----------------------------|----------------------------|------------------------------------------------------------------------|
 | *Mobile*                    | `devices-info.sh`          | Android device infos (adb)                                             | 
-| *System*                    |                            |                                                                        |
+| *System*                    | `sizefiles-limit.sh`       | Checks for file size limits for a given extension in a directory       |
 | *Network*                   | `hosts-up.sh`              | Scanner Network Hosts up                                               |
 | *Disk & Storage*            |                            |                                                                        |
 | *Packages & Services*       | `packages-info.sh`         | Packages infos (.deb)                                                  |
