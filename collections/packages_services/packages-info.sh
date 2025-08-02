@@ -12,14 +12,15 @@ set -euo pipefail
 # ------------------------------------------------------------------------------
 # Banner
 # ------------------------------------------------------------------------------
-banner_script() {
+print_banner() {
+  echo -e "${CYAN}"
   echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo -e "🛡️  ${CYAN}NETOPSYS${RESET} - Bash Collections          "
   echo "                                                           "
   echo "   Script : Display infos packages                         "
   echo "   Author : netopsys (https://github.com/netopsys)         "
   echo "==========================================================="
-  echo
+  echo -e "${RESET}"
 }
 
 # ------------------------------------------------------------------------------
@@ -145,7 +146,7 @@ main() {
     print_usage
   fi
 
-  banner_script
+  print_banner
 
   while [[ $# -gt 0 ]]; do
     case "$1" in

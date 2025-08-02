@@ -12,14 +12,15 @@ set -euo pipefail
 # ------------------------------------------------------------------------------
 # Banner
 # ------------------------------------------------------------------------------
-banner_script() {
+print_banner() {
+  echo -e "${CYAN}"
   echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo -e "🛡️  ${CYAN}NETOPSYS${RESET} - Bash Collections          "
   echo "                                                           "
   echo "   Script : Manage USB Access with USBGuard                "
   echo "   Author : netopsys (https://github.com/netopsys)         "
   echo "==========================================================="
-  echo
+  echo -e "${RESET}"
 }
 
 # ------------------------------------------------------------------------------
@@ -160,7 +161,7 @@ main() {
     shift
   done
 
-  banner_script  
+  print_banner  
   check_root
   check_dependencies
   list_devices 

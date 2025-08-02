@@ -15,15 +15,13 @@ trap 'log_warn "Interrupted by user"; exit 1' SIGINT
 # ------------------------------------------------------------------------------
 # Banner
 # ------------------------------------------------------------------------------
-print_banner() {
-  cat << EOF
-===========================================================
-🛡️  NETOPSYS - Bash Collections
-
-   Script : Wrapper for Bash Collections
-   Author : netopsys (https://github.com/netopsys)
-===========================================================
-EOF
+print_banner() { 
+  echo "==========================================================="
+  echo -e "🛡️  ${CYAN}NETOPSYS${RESET} - Bash Collections          "
+  echo "                                                           " 
+  echo "   Script : Wrapper for Bash Collections                   "
+  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo "===========================================================" 
   echo
 }
 

@@ -12,14 +12,15 @@
 # ------------------------------------------------------------------------------
 # Banner
 # ------------------------------------------------------------------------------
-banner_script() {
+print_banner() {
+  echo -e "${CYAN}"
   echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo -e "🛡️  ${CYAN}NETOPSYS${RESET} - Bash Collections          "
   echo "                                                           "
   echo "   Script : Scanner network hosts up                       "
   echo "   Author : netopsys (https://github.com/netopsys)         "
   echo "==========================================================="
-  echo
+  echo -e "${RESET}"
 }
 
 # ------------------------------------------------------------------------------
@@ -176,7 +177,7 @@ main() {
     shift
   done
 
-  banner_script  
+  print_banner  
   warning_script
   check_root
   check_dependencies

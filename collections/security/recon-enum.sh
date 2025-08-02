@@ -13,14 +13,15 @@
 # ------------------------------------------------------------------------------
 # Banner
 # ------------------------------------------------------------------------------
-banner_script() {
+print_banner() {
+  echo -e "${CYAN}"
   echo "==========================================================="
-  echo "🛡️  NETOPSYS - Bash Collections                            "
+  echo -e "🛡️  ${CYAN}NETOPSYS${RESET} - Bash Collections          "
   echo "                                                           "
   echo "   Script : Automatic reconnaissance phase on a network target.     "
   echo "   Author : netopsys (https://github.com/netopsys)         "
   echo "==========================================================="
-  echo
+  echo -e "${RESET}"
 }
 
 # ------------------------------------------------------------------------------
@@ -223,7 +224,7 @@ main() {
   fi
 
   check_root
-  banner_script  
+  print_banner  
   warning_script
   check_dependencies
   start_script
