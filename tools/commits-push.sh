@@ -51,11 +51,6 @@ check_signing_key() {
 # ------------------------------------------------------------------------------
 # Main script logic
 # ------------------------------------------------------------------------------
-chown catalya:catalya /home/catalya/OpsCenter/bash/collections/README.md
-ls -la /home/catalya/OpsCenter/bash/collections/README.md
-chown catalya:catalya /home/catalya/OpsCenter/bash/collections/VERSION
-ls -la /home/catalya/OpsCenter/bash/collections/VERSION
-
 base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ ! -d "$base_dir" ]]; then
