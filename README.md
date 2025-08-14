@@ -1,6 +1,6 @@
 # Bash Collections - by netopsys
 
-![Lint](https://github.com/netopsys/netopsys-bash-collections/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
+![Lint](https://github.com/netopsys/bash-collections.git/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)
 ![Version](https://img.shields.io/badge/version-0.20.0-blue.svg?style=flat-square&logoColor=white)
 
@@ -8,35 +8,36 @@
 
 ## Contents
 
-| Collections                 | Scripts                    | Description                                                            |
-|-----------------------------|----------------------------|------------------------------------------------------------------------|
-| *Mobile*                    | `devices-info.sh`          | Android device infos (adb)                                             | 
-| *System*                    |                            |                                                                        |
-| *Network*                   | `hosts-up.sh`              | Scanner Network Hosts up                                               |
-| *Disk & Storage*            | `sizefiles-limit.sh`       | Checks for file size limits for a given extension in a directory       |
-| *Packages & Services*       | `packages-info.sh`         | Packages infos (.deb)                                                  |
-| *Security*                  | `usb-control.sh`           | Manage USB device access                                               |
-|                             | `recon-enum.sh`            | Automatic reconnaissance phase on a network target                     |
-| *Tools*                     | `shellcheck-control.sh`    | Check quality scripts bash                                             |
-| _More scripts coming soon_  |                            |                                                                        |
+| Collections                   | Description                                                            |
+|-------------------------------|------------------------------------------------------------------------|
+| `manage-state-icmp-echo.sh`   | Manage state icmp echo                                                 |
+| `manage-usb-device-access.sh` | Manage USB device access                                               |
+| `scan-adb-devives-info.sh`    | Show Mobile device infos                                               | 
+| `scan-disk-health.sh`         | Show Disk health infos                                                 |
+| `scan-hosts-up.sh`            | Show Hosts up on a network target                                      |
+| `scan-packages-info.sh`       | Show Packages infos (.deb)                                             |
+| `scan-recon-enum.sh`          | Pentest recon phases on a network target                               |
+| `scan-shellcheck.sh`          | Shellcheck audit                                                       |
+| `scan-system.sh`              | Show hardware and network infos                                        |
+| `scan-sizefiles-limit.sh`     | Scan files metadata size limit                                         |
+| _More scripts...._            |                                                                        |
 
 ## Requirements
 
 - GNU/Linux (Debian, Ubuntu, etc.)
 - `bash` (version 4 or higher)
-- Relevant package dependencies (e.g., `usbguard` for USB control)
 
 ## Getting Started
 
 ```bash
-git clone https://github.com/netopsys/netopsys-bash-collections.git
-cd netopsys-bash-collections 
-sudo ./wrapper.sh
+git clone https://github.com/netopsys/bash-collections.git
+cd bash-collections
+sudo ./runner.sh
 ```
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/netopsys/netopsys-bash-collections/blob/main/CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/netopsys/bash-collections.git/blob/main/CONTRIBUTING.md) for guidelines.
 
 ## Security
 
-Please review our [SECURITY.md](https://github.com/netopsys/netopsys-bash-collections/blob/main/SECURITY.md) for reporting vulnerabilities and security policies.
+Please review our [SECURITY.md](https://github.com/netopsys/bash-collections.git/blob/main/SECURITY.md) for reporting vulnerabilities and security policies.
