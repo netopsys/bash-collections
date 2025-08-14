@@ -22,14 +22,12 @@ print_banner() {
 # ------------------------------------------------------------------------------
 # Logging Helpers
 # ------------------------------------------------------------------------------
-readonly RED="\033[0;31m"
-readonly GREEN="\033[0;32m" 
+readonly RED="\033[0;31m" 
 readonly YELLOW="\033[1;33m"
 readonly CYAN="\033[0;36m"
 readonly RESET="\033[0m"
  
-log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
-log_ok()    { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; } 
+log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; } 
 log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
 log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*"; }
 

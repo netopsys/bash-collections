@@ -23,16 +23,12 @@ print_banner() {
 # ------------------------------------------------------------------------------
 # Logging Helpers
 # ------------------------------------------------------------------------------
-readonly RED="\033[0;31m"
+readonly CYAN='\033[0;36m' 
 readonly GREEN="\033[0;32m" 
-readonly YELLOW="\033[1;33m"
-readonly CYAN="\033[0;36m"
 readonly RESET="\033[0m"
- 
-log_info()  { printf "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
-log_ok()    { printf "[$(date +'%Y-%m-%d %H:%M:%S')] ${GREEN}[OK]${RESET} $*"; } 
-log_warn()  { printf "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
-log_error() { printf "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*"; }
+
+log_info()  { printf "[%s] ${CYAN}[INFO]${RESET} %s\n"  "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
+log_ok()    { printf "[%s] ${GREEN}[OK]${RESET}   %s\n"  "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; } 
 
 # ------------------------------------------------------------------------------
 # Functions
@@ -44,31 +40,36 @@ confirm_step() {
 
 enabled_icmp_echo() {
 	log_info "Enabling ping replies..."
-        echo 0 | sudo tee /proc/sys/net/ipv4/icmp_echo_ignore_all > /dev/null
-        log_info "Ping responses are now ENABLED."
-        systemctl reload NetworkManager.service
-        systemctl daemon-reload
-        exit 0
+  echo 0 | sudo tee /proc/sys/net/ipv4/icmp_echo_ignore_all > /dev/null
+  systemctl reload NetworkManager.service
+  systemctl daemon-reload
+  status_icmp=$(sudo cat /proc/sys/net/ipv4/icmp_echo_ignore_all)
+  log_info "ICMP STATUS (0=on 1=off): $status_icmp"
+  log_ok "Ping responses are now ENABLED."
+  exit 0
 }
 
 disabled_icmp_echo() {
-        log_info "Disabling ping replies..."
-        echo 1 | sudo tee /proc/sys/net/ipv4/icmp_echo_ignore_all > /dev/null
-        log_info "Ping responses are now DISABLED."
-        systemctl reload NetworkManager.service
-        systemctl daemon-reload
-        exit 0
+  log_info "Disabling ping replies..."
+  echo 1 | sudo tee /proc/sys/net/ipv4/icmp_echo_ignore_all > /dev/null
+  systemctl reload NetworkManager.service
+  systemctl daemon-reload
+  status_icmp=$(sudo cat /proc/sys/net/ipv4/icmp_echo_ignore_all)
+  log_info "ICMP STATUS (0=on 1=off): $status_icmp"
+  log_ok "Ping responses are now DISABLED."
+  exit 0
 }
 
 # ------------------------------------------------------------------------------
 # Usage
 # ------------------------------------------------------------------------------
 print_usage() {
-  printf "Usage: $(basename "$0")"
+  echo "Usage: $(basename "$0")"
   exit 0
 }
+
 # ------------------------------------------------------------------------------
-# MAIN
+# Main prog
 # ------------------------------------------------------------------------------
 main() {
   
@@ -86,7 +87,7 @@ main() {
   status_icmp=$(sudo cat /proc/sys/net/ipv4/icmp_echo_ignore_all)
   log_info "ICMP STATUS (0=on 1=off): $status_icmp"
   confirm_step "Do you want to ENABLE ping response"  && enabled_icmp_echo 
-  confirm_step "Do you want to DISABLED ping response"  && enabled_icmp_echo 
+  confirm_step "Do you want to DISABLED ping response"  && disabled_icmp_echo 
   exit 0 
 
 }

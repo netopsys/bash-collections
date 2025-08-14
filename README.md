@@ -1,6 +1,6 @@
 # Bash Collections - by netopsys
 
-![Lint](https://github.com/netopsys/bash-collections.git/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
+![Lint](https://github.com/netopsys/bash-collections/actions/workflows/lint.yml/badge.svg?style=flat-square&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)
 ![Version](https://img.shields.io/badge/version-0.21.0-blue.svg?style=flat-square&logoColor=white)
 
