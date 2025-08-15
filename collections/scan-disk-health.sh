@@ -12,16 +12,7 @@ set -euo pipefail
 [ -n "${DEBUG:-}" ] && set -x  
 
 # ------------------------------------------------------------------------------
-# Banner
-# ------------------------------------------------------------------------------
-print_banner() { 
-  echo "==========================================================="
-  echo -e "🛡️  ${CYAN}NETOPSYS${RESET} - DISK - Show Disk health infos  "
-  echo "==========================================================="  
-} 
-
-# ------------------------------------------------------------------------------
-# Logging Helpers
+# Logging Colors
 # ------------------------------------------------------------------------------
 readonly CYAN='\033[0;36m'
 readonly RED="\033[0;31m"
@@ -29,22 +20,23 @@ readonly GREEN="\033[0;32m"
 readonly YELLOW="\033[0;33m" 
 readonly RESET="\033[0m"
 
+# ------------------------------------------------------------------------------
+# Logging Helpers
+# ------------------------------------------------------------------------------
 log_info()  { printf "[%s] ${CYAN}[INFO]${RESET} %s\n"  "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 log_ok()    { printf "[%s] ${GREEN}[OK]${RESET}   %s\n"  "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 log_warn()  { printf "[%s] ${YELLOW}[WARN]${RESET} %s\n"  "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 log_error() { printf "[%s] ${RED}[ERROR]${RESET} %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
- 
 
-# ============================================================================
-# Root check
-# ============================================================================
-if [ "$EUID" -ne 0 ]; then
-  echo -e "${RED}[ERROR]${RESET} This script must be run as root (sudo)."
-  exit 1
-fi
+# ------------------------------------------------------------------------------
+# Banner
+# ------------------------------------------------------------------------------
+print_banner() { 
+  echo "==========================================================="
+  echo -e "🛡️  ${CYAN}NETOPSYS${RESET} - DISK - Show Disk health infos"
+  echo "==========================================================="  
+} 
 
-print_banner
-log_info "Detecting disks..."
 
 # ------------------------------------------------------------------------------
 # Functions
@@ -63,146 +55,139 @@ convert_size() {
 }
 
 check_disk_security() {
-  echo "$1" | grep -qE "^\s+enabled"              || return 1
-  echo "$1" | grep -qE "^\s+locked"               || return 1
-  echo "$1" | grep -qE "^\s+not\s+frozen"         || return 1
-  echo "$1" | grep -qE "^\s+supported"            || return 1
-  echo "$1" | grep -qE "^\s+supported: enhanced erase" || return 1
+  echo "$1" | grep -qE "^\s+enabled"                    || return 1
+  echo "$1" | grep -qE "^\s+locked"                     || return 1
+  echo "$1" | grep -qE "^\s+not\s+frozen"               || return 1
+  echo "$1" | grep -qE "^\s+supported"                  || return 1
+  echo "$1" | grep -qE "^\s+supported: enhanced erase"  || return 1
   return 0
 }
 
-# ============================================================================
-# Disk listing
-# ============================================================================
-echo "#1"
-lsblk -o MODEL,TYPE,NAME,FSTYPE,UUID,SIZE,FSAVAIL,FSUSE%,RO,MOUNTPOINT
+list_disks() {
+  local name sys rot type bus size model
+  echo "#1"
+  lsblk -o MODEL,TYPE,NAME,FSTYPE,UUID,SIZE,FSAVAIL,FSUSE%,RO,MOUNTPOINT
 
-echo "#2"
-for disk in /sys/block/sd*; do
-  name=$(basename "$disk")
-  sys="/sys/block/$name"
+  echo "#2"
+  for disk in /sys/block/sd*; do
+    name=$(basename "$disk")
+    sys="/sys/block/$name"
 
-  # Detect type (SSD / HDD)
-  if [[ -f "$sys/queue/rotational" ]]; then
-    rot=$(cat "$sys/queue/rotational")
-    type=$([[ "$rot" == "0" ]] && echo "SSD" || echo "HDD")
+    # Type de disque
+    if [[ -f "$sys/queue/rotational" ]]; then
+      rot=$(cat "$sys/queue/rotational")
+      type=$([[ "$rot" == "0" ]] && echo "SSD" || echo "HDD")
+    else
+      type="Unknown"
+    fi
+
+    # Bus
+    if udevadm info --query=property --name="/dev/$name" | grep -q "ID_BUS=usb"; then
+      bus="USB"
+    elif [[ "$name" == nvme* ]]; then
+      bus="NVMe"
+    else
+      bus="SATA/SCSI"
+    fi
+
+    size=$(lsblk -bdn -o SIZE "/dev/$name")
+    size=$(convert_size "$size")
+    model=$(cat "$sys/device/model" 2>/dev/null || echo "-")
+
+    echo "/dev/$name : $size - $type ($bus) - $model - rotational $rot"
+  done
+}
+
+analyze_disk() {
+  local DISK_PATH="$1"
+  log_info "Analyzing $DISK_PATH..."
+
+  # Partition table
+  log_info "PARTITION TABLE TEST"
+  local PART_INFO
+  PART_INFO=$(parted -s "$DISK_PATH" print 2>&1)
+  if echo "$PART_INFO" | grep -q "unrecognised disk label"; then
+    log_info "$PART_INFO"
+    log_error "No partition table detected."
   else
-    type="Unknown"
+    log_info "$PART_INFO"
+    log_ok "Partition table detected."
   fi
 
-  # Detect bus type
-  if udevadm info --query=property --name="/dev/$name" | grep -q "ID_BUS=usb"; then
-    bus="USB"
-  elif [[ "$name" == nvme* ]]; then
-    bus="NVMe"
+  # hdparm security
+  log_info "HDPARM TEST"
+  local SECINFO
+  SECINFO=$(hdparm -I "$DISK_PATH" 2>/dev/null | grep -A20 "Security:")
+  if check_disk_security "$SECINFO"; then
+    log_info "$SECINFO"
+    log_ok "Disk $DISK_PATH is in an ideal security state."
   else
-    bus="SATA/SCSI"
+    log_error "Disk $DISK_PATH is not in an ideal security state."
+    log_info "$SECINFO"
   fi
 
-  size=$(lsblk -bdn -o SIZE "/dev/$name")
-  size=$(convert_size "$size")
-  model=$(cat "$sys/device/model" 2>/dev/null || echo "-")
-
-  echo "/dev/$name : $size - $type ($bus) - $model - rotational $rot"
-done
-
-# ============================================================================
-# Analysis
-# ============================================================================
-read -rp "➤ Enter the name of the disk to analyze (e.g., sdb) : " DISK
-DISK_PATH="/dev/$DISK"
-
-log_info "Analyzing $DISK_PATH..."
-
-# if [ ! -b "$DISK_PATH" ]; then
-#   echo "[⛔] Disk $DISK_PATH does not exist."
-#   exit 1
-# fi
-
-SECINFO=$(hdparm -I "$DISK_PATH" 2>/dev/null | grep -A20 "Security:")
-
-log_info "PARTITION TABLE TEST"
-PART_INFO=$(parted -s "$DISK_PATH" print 2>&1)
-if echo "$PART_INFO" | grep -q "unrecognised disk label"; then
-  log_info "$PART_INFO"
-  log_error "No partition table detected."
-else
-  log_info "$PART_INFO"
-  log_ok "Partition table detected."
-fi
-
-log_info "HDPARM TEST"
-if check_disk_security "$SECINFO"; then
-  log_info "$SECINFO"
-  log_ok "Disk $DISK is in an ideal security state."
-else
-
-  log_info "Ideal desired state...
-Security:
-        Master password revision code = xxxxx
-            supported
-            enabled
-            locked
-        not frozen
-        not expired: security count
-            supported: enhanced erase
-"
-  log_info "Current state of $DISK_PATH..."
-  log_info "$SECINFO"
-  log_error "Disk $DISK_PATH is not in an ideal security state."
-fi
-
-# ============================================================================
-# S.M.A.R.T. Test
-# ============================================================================
-log_info "S.M.A.R.T TEST"
-if smartctl -i "$DISK_PATH" &> /dev/null; then
-  smartctl -i "$DISK_PATH"
-  smart_status=$(smartctl -H "$DISK_PATH" | awk '/overall-health/ {print $NF}')
-  
-  if [[ "$smart_status" == "PASSED" ]]; then
-    log_ok "SMART status: $smart_status"
+  # SMART test
+  log_info "S.M.A.R.T TEST"
+  if smartctl -i "$DISK_PATH" &> /dev/null; then
+    smartctl -i "$DISK_PATH"
+    local smart_status
+    smart_status=$(smartctl -H "$DISK_PATH" | awk '/overall-health/ {print $NF}')
+    if [[ "$smart_status" == "PASSED" ]]; then
+      log_ok "SMART status: $smart_status"
+    else
+      log_error "SMART status: ISSUE ($smart_status)"
+    fi
   else
-    log_error "SMART status: ISSUE ($smart_status)"
+    log_error "SMART not supported on $DISK_PATH"
   fi
-else
-  log_error "SMART not supported on $DISK_PATH"
-fi
 
-# ============================================================================
-# Disk usage check
-# ============================================================================
-if [ "$DISK_PATH" == "/dev/sda" ]; then
-  log_info "DISK SPACE USAGE TEST"
-  used_pct=$(df / | awk 'NR==2 {print $5}' | tr -d '%')
-  if [ "$used_pct" -ge 90 ]; then
-    log_error "Disk is almost full! (${used_pct}%)"
+  # Disk space (only /dev/sda)
+  if [ "$DISK_PATH" == "/dev/sda" ]; then
+    log_info "DISK SPACE USAGE TEST"
+    local used_pct
+    used_pct=$(df / | awk 'NR==2 {print $5}' | tr -d '%')
+    if [[ used_pct -ge 90 ]]; then
+      log_ok "Used space: ${used_pct}%"
+    else
+      log_error "Disk is almost full! (${used_pct}%)"
+    fi 
+  fi
+
+  # Bad blocks
+  log_info "BAD BLOCKS TEST"
+  read -rp "➤ Scan for bad blocks (read-only, slow)? [y/N] : " CHOICE
+  if [[ "${CHOICE,,}" == "y" ]]; then
+    local LOG="/tmp/badblocks_disk_${DISK}.log"
+    badblocks -svn "$DISK_PATH" | tee -a "$LOG" 2>/dev/null
+    if [ -s "$LOG" ]; then
+      log_ok "No bad blocks detected."
+    else
+      log_error "Bad blocks detected!"
+    fi
   else
-    log_ok "Used space: ${used_pct}%"
+    log_warn "[Skipped] BAD BLOCKS TEST"
   fi
-fi
 
-# ============================================================================
-# Badblocks Scan (read-only)
-# ============================================================================
-log_info "BAD BLOCKS TEST"
-read -rp "➤ Scan for bad blocks (read-only, slow)? [y/N] : " CHOICE
-CHOICE="${CHOICE:-n}" 
-if [[ "$CHOICE" == "yes" ]]; then
-  LOG="/tmp/badblocks_disk_${DISK}.log"
-  badblocks -svn "$DISK_PATH" | tee -a "$LOG" 2>/dev/null
+  log_ok "Analysis of $DISK_PATH completed."
+}
 
-  if [ -s "$LOG" ]; then
-    log_error "Bad blocks detected!"
-    cat "$LOG"
-  else
-    log_ok "No bad blocks detected." | tee -a "$LOG"
+# ------------------------------------------------------------------------------
+# Main prog
+# ------------------------------------------------------------------------------
+main() {
+  # Root check
+  if [ "$EUID" -ne 0 ]; then
+    echo -e "${RED}[ERROR]${RESET} This script must be run as root (sudo)."
+    exit 1
   fi
-else
-  log_warn "[Skipped] BAD BLOCKS TEST"
-fi
 
-# ============================================================================
-# Done
-# ============================================================================
-log_ok "Analysis of $DISK_PATH completed."
+  print_banner
+  log_info "Detecting disks..."
+  list_disks
+
+  read -rp "➤ Enter the name of the disk to analyze (e.g., sdb) : " DISK
+  analyze_disk "/dev/$DISK"
+}
+
+# Run only if executed directly
+[[ "${BASH_SOURCE[0]}" == "$0" ]] && main "$@"
