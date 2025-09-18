@@ -8,24 +8,28 @@
 
 ## Contents
 
-| Collections                   | Description                                                            |
-|-------------------------------|------------------------------------------------------------------------|
-| `manage-state-icmp-echo.sh`   | Manage state icmp echo                                                 |
-| `manage-usb-device-access.sh` | Manage USB device access                                               |
-| `scan-adb-devives-info.sh`    | Show Mobile device infos                                               | 
-| `scan-disk-health.sh`         | Show Disk health infos                                                 |
-| `scan-hosts-up.sh`            | Show Hosts up on a network target                                      |
-| `scan-packages-info.sh`       | Show Packages infos (.deb)                                             |
-| `scan-recon-enum.sh`          | Pentest recon phases on a network target                               |
-| `scan-shellcheck.sh`          | Shellcheck audit                                                       |
-| `scan-system.sh`              | Show hardware and network infos                                        |
-| `scan-sizefiles-limit.sh`     | Scan files metadata size limit                                         |
-| _More scripts...._            |                                                                        |
+```bash
+Collections:
+    1) ANDROID  - Scan Mobile device infos
+    2) NETWORK  - Scan Bluetooth 
+    3) NETWORK  - Scan Hosts up on a network target 
+    4) NETWORK  - Scan Device Network infos
+    5) NETWORK  - Scan Wi-Fi 
+    6) SECURITY - Manage state network interfaces (Ethernet, Wi-Fi, Bluetooth) 
+    7) SECURITY - Manage USB device access 
+    8) SECURITY - Pentest (phase 2/4) enumeration on a network target
+    9) SECURITY - Pentest (phase 1/4) reconnaissance on a network target
+   10) SYSTEM   - Scan Disk health infos
+   11) SYSTEM   - Scan Hardware infos
+   12) SYSTEM   - Scan process monitoring 
+   13) SYSTEM   - Scan files metadata size limit
+   14) SYSTEM   - Shellcheck audit
+   _More scripts...._ 
+```
 
 ## Requirements
 
-- GNU/Linux (Debian, Ubuntu, etc.)
-- `bash` (version 4 or higher)
+- GNU/Linux (Debian, Ubuntu, etc.) 
 
 ## Getting Started
 

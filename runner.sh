@@ -10,16 +10,24 @@
 #DEBUG=1
 set -euo pipefail
 [ -n "${DEBUG:-}" ] && set -x 
-trap 'log_warn "Interrupted by user"; exit 1' SIGINT
+
+# trap 'log_warn "Interrupted by user"; exit 1' SIGINT
+# ------------------------------------------------------------------------------
+# Trap cleanup
+# ------------------------------------------------------------------------------
+cleanup() {
+  log_warn "Interrupted by user, exiting..."
+  exit 130
+}
+trap cleanup INT TERM
 
 # ------------------------------------------------------------------------------
 # Banner
 # ------------------------------------------------------------------------------
-print_banner() { 
+print_banner() {
+  clear
   echo "==========================================================="
-  echo -e "🛡️  ${CYAN}NETOPSYS${RESET} - Bash Collections          "
-  echo "                                                           "  
-  echo "   Author : netopsys (https://github.com/netopsys)         "
+  echo -e "🛡️  ${CYAN}NETOPSYS${RESET} - Bash Collections          " 
   echo "===========================================================" 
   echo
 }
@@ -32,9 +40,9 @@ readonly YELLOW="\033[0;33m"
 readonly CYAN="\033[0;36m"
 readonly RESET="\033[0m"
  
-log_info()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${CYAN}[INFO]${RESET} $*"; }
-log_warn()  { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${YELLOW}[WARN]${RESET} $*"; }
-log_error() { echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] ${RED}[ERROR]${RESET} $*"; } 
+log_info()  { echo -e "$(date +'%Y-%m-%d %H:%M:%S') ${CYAN}[INFO]${RESET} $*"; }
+log_warn()  { echo -e "$(date +'%Y-%m-%d %H:%M:%S') ${YELLOW}[WARN]${RESET} $*"; }
+log_error() { echo -e "$(date +'%Y-%m-%d %H:%M:%S') ${RED}[ERROR]${RESET} $*"; } 
 
 # ------------------------------------------------------------------------------
 # Constants & Variables
@@ -47,10 +55,8 @@ args=()
 # ------------------------------------------------------------------------------
 # Functions
 # ------------------------------------------------------------------------------
-
-# ------------------------------------------------------------------------------
-# Extract the description from the script file header.
-# ------------------------------------------------------------------------------
+ 
+# Extract the description from the script file header. 
 get_description() {
   local file="$1"
   if [[ ! -f "$file" ]]; then
@@ -66,12 +72,10 @@ get_description() {
     echo "$desc" | sed -E 's/^# *Description *: *//'
   fi
 }
-
-# ------------------------------------------------------------------------------
-# List executable Bash scripts under SCRIPT_ROOT.
-# ------------------------------------------------------------------------------
+ 
+# List executable Bash scripts under SCRIPT_ROOT. 
 list_scripts() {
-  log_info "Programs :\n" 
+  # log_info "Programs :\n" 
 
   local base_dir
   base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$SCRIPT_ROOT"
@@ -90,23 +94,22 @@ list_scripts() {
     exit 1
   fi
   
+  echo "Menu:" 
   for i in "${!scripts[@]}"; do
     # local script_name 
     local description
     # script_name="$(basename "${scripts[i]}")"
     description="$(get_description "${scripts[i]}")"
-    printf " %5d. %-35s\n" $((i + 1)) "$description"
+    printf "%5d) %-5s\n" $((i + 1)) "$description"
   done
   echo 
 }
-
-# ------------------------------------------------------------------------------
-# Prompt user to select a script number.
-# ------------------------------------------------------------------------------
+ 
+# Prompt user to select a script number. 
 select_script() {
   local choice
   while true; do
-    read -rp "➤ Select a script number to run : " choice || {
+    read -rp "➤ Select number: " choice || {
       exit 1
     }
 
@@ -126,13 +129,11 @@ select_script() {
     fi
   done
 }
-
-# ------------------------------------------------------------------------------
-# Ask user if they want to see help output for the selected script.
-# ------------------------------------------------------------------------------
+ 
+# Ask user if they want to see help output for the selected script. 
 ask_print_usage_script() {
   local CHOICE
-  read -rp "➤ Show help for this script first? [y/N]: " CHOICE || CHOICE="n"
+  read -rp "➤ Show help? [y/N]: " CHOICE || CHOICE="n"
   CHOICE="${CHOICE:-n}"
 
   if [[ "$CHOICE" =~ ^[Yy]$ ]]; then
@@ -147,19 +148,15 @@ ask_print_usage_script() {
     echo
   fi
 }
-
-# ------------------------------------------------------------------------------
-# Prompt user to enter arguments to pass to the selected script.
-# ------------------------------------------------------------------------------
+ 
+# Prompt user to enter arguments to pass to the selected script. 
 prompt_args() {
   read -rp "➤ Enter options/arguments to pass (or leave empty): " user_args || user_args=""
   # shellcheck disable=SC2206
   args=($user_args)
 }
- 
-# ------------------------------------------------------------------------------
-# Run the selected script with the provided arguments.
-# ------------------------------------------------------------------------------
+  
+# Run the selected script with the provided arguments. 
 run_script() {
   echo 
   if bash "$selected_script" "${args[@]}"; then 

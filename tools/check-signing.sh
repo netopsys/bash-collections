@@ -22,5 +22,5 @@ if [ ! -f "$PRIVATE_KEY_PATH" ]; then
   exit 1
 fi
 
-echo "✅ Git signing is correctly configured."
+echo "✔ Git signing is correctly configured."
 exit 0
