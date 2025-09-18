@@ -72,8 +72,8 @@ manage_network_state_wifi() {
 }
 
 scan_wifi() {
-    local timestamp
-    timestamp=$(date '+%Y-%m-%d %H:%M:%S') 
+    # local timestamp
+    # timestamp=$(date '+%Y-%m-%d %H:%M:%S') 
     nmcli -t -f BSSID,SSID,SIGNAL dev wifi list | while IFS=: read -r bssid ssid signal; do
         if [[ -n "$bssid" ]]; then
             log_info "Wi-Fi | BSSID=$bssid SSID=\"$ssid\" Signal=${signal}%" | tee -a "$LOGFILE"
